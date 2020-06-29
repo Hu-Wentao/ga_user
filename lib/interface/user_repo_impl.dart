@@ -9,14 +9,13 @@ import 'package:gat_env_info/domain/model.dart';
 import 'package:gat_env_info/interface/dto/dto.dart';
 import 'package:gat_env_info/interface/i_env_info_source.dart';
 import 'package:get_arch_core/domain/error/failures.dart';
-import 'package:injectable/injectable.dart';
 
 import 'dto/auth_dto.dart';
 import 'dto/user_dto.dart';
 import 'i_user_api.dart';
 import 'i_user_source.dart';
 
-@LazySingleton(as: IUserRepo)
+//@LazySingleton(as: IUserRepo) // 手动注册
 class UserRepoImpl extends IUserRepo {
   EnvInfo env;
   // 网络源

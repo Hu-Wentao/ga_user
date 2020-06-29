@@ -5,15 +5,13 @@
 import 'package:ga_user/interface/dto/user_dto.dart';
 import 'package:ga_user/interface/i_user_source.dart';
 import 'package:get_arch_core/get_arch_core.dart';
-import 'package:injectable/injectable.dart';
 
 /// 实现类
-@LazySingleton(as: IUserLocalSource)
+//@LazySingleton(as: IUserLocalSource) // 手动注册
 class UserLocalSource extends IUserLocalSource {
   final IStorage storage;
 
   UserLocalSource(this.storage);
-
 
   @override
   UserDto getCurUserDto() {

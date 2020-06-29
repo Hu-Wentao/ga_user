@@ -3,24 +3,24 @@
 // Date  : 2020/6/26
 // Time  : 23:41
 
-import 'package:ga_user/application/login.dart';
-import 'package:ga_user/application/register.dart';
-import 'package:ga_user/application/update.dart';
 import 'package:ga_user/domain/repositories/i_user_repo.dart';
 import 'package:ga_user/infrastructure/user_api_impl.dart';
 import 'package:ga_user/infrastructure/user_local_source.dart';
 import 'package:ga_user/interface/i_user_api.dart';
 import 'package:ga_user/interface/i_user_source.dart';
 import 'package:ga_user/interface/user_repo_impl.dart';
-import 'package:ga_user/profile/user_package.iconfig.dart';
 import 'package:gat_env_info/interface/i_env_info_source.dart';
 import 'package:gat_env_info/profile/env_info_package.dart';
 import 'package:get_arch_core/domain/env_config.dart';
 import 'package:get_arch_core/get_arch_core.dart';
 import 'package:get_arch_core/get_arch_part.dart';
 
+import 'user_package.iconfig.dart';
+
 GetIt _g = GetIt.I;
 
+///
+/// [pkgEnv] 建议仅供测试添加, 不赋值时默认使用全局EnvConfig
 ///
 /// 以下bool型变量如果设为false,则表示你需要手动实现并注册对应的接口,
 /// 注册接口是不分时间先后的,先加载本模块,然后再加载主项目中自己的实现, 也是没有问题的.
@@ -31,7 +31,10 @@ GetIt _g = GetIt.I;
 /// [openIUserLocalSource] 本地用户存储实现, 默认true
 /// [openIEnvInfoSource] 是否使用默认的IEnvInfoSource实现, 默认true
 ///
-/// 这是一个开放型的模块, 实际上还可以
+/// -- 暂不支持开关UseCase
+///
+/// 这是一个开放型的模块, 如果你希望构建一个只对外部提供UseCase的模块,
+/// 则请注意将内部注册的模块添加特定的用例名
 class UserPackage extends IGetArchPackage {
   final bool openIUserRepo;
   final bool openIUserLocalSource;
@@ -72,17 +75,19 @@ class UserPackage extends IGetArchPackage {
             _g<IEnvInfoSource>(),
           ));
 
-    _g.registerLazySingleton<UpdateUserInfo>(() => UpdateUserInfo());
-    _g.registerLazySingleton<UserLogin>(() => UserLogin(_g<IUserRepo>()));
-    _g.registerLazySingleton<UserRegister>(() => UserRegister(_g<IUserRepo>()));
-//    await initDI(config.envSign);
+    // 用例注册
+    await initDI(config.envSign);
   }
 
   @override
-  String printPackageConfigInfo(EnvConfig config) => '''
-  <IUserRepo>实现: ${openIUserRepo ? '开启' : '关闭'}
-  <IEnvInfoSource>实现: ${openIEnvInfoSource ? '开启' : '关闭'}
-  ''';
+  Map<String, bool> get printBoolStateWithRegTypeName => {
+        'IUserAPI': openIUserAPI,
+        'IUserRepo': openIUserRepo,
+        'IEnvInfoSource': openIEnvInfoSource,
+        'IUserLocalSource': openIUserLocalSource,
+      };
+  @override
+  Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => null;
 }
 
 /// 在这里可以使用injectable自动生成DI代码,

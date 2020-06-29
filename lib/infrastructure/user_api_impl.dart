@@ -5,10 +5,9 @@
 import 'package:ga_user/interface/i_user_api.dart';
 import 'package:get_arch_core/get_arch_core.dart';
 import 'package:get_arch_core/interface/i_common_interface.dart';
-import 'package:injectable/injectable.dart';
 
 /// 请根据自己项目的情况手动设定API, 本例只是做代码演示
-@LazySingleton(as: IUserAPI)
+//@LazySingleton(as: IUserAPI) // 手动注册
 class UserAPI implements IUserAPI {
   final IHttp _http;
 
