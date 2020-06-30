@@ -103,7 +103,7 @@ class AuthVm extends ViewModel<AuthM> {
   }
 
   bool _onAuthFail(String s) {
-    dialog.text('认证出错: $s\n');
+    dialog.toast('认证出错: $s\n');
     return false;
   }
 }

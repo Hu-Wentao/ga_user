@@ -8,7 +8,7 @@ export 'application/register.dart';
 export 'application/update.dart';
 
 export 'interface/i_user_api.dart';
-export 'interface/i_user_source.dart';
+export 'interface/i_user_local.dart';
 export 'interface/auth_view_model.dart';
 
 export 'infrastructure/ui/auth_page.dart';

@@ -16,7 +16,6 @@ class UserRegister extends UseCase<Unit, User> {
   UserRegister(this.userRepo);
 
   @override
-  Future<Either<Failure, Unit>> call(User p) async {
-    return await userRepo.createWithEmail(p);
-  }
+  Future<Either<Failure, Unit>> call(User p) async =>
+      await userRepo.createWithEmail(p);
 }

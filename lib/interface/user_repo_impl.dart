@@ -9,11 +9,12 @@ import 'package:gat_env_info/domain/model.dart';
 import 'package:gat_env_info/interface/dto/dto.dart';
 import 'package:gat_env_info/interface/i_env_info_source.dart';
 import 'package:get_arch_core/domain/error/failures.dart';
+import 'package:get_arch_core/get_arch_core.dart';
 
 import 'dto/auth_dto.dart';
 import 'dto/user_dto.dart';
 import 'i_user_api.dart';
-import 'i_user_source.dart';
+import 'i_user_local.dart';
 
 //@LazySingleton(as: IUserRepo) // 手动注册
 class UserRepoImpl extends IUserRepo {
@@ -22,7 +23,7 @@ class UserRepoImpl extends IUserRepo {
   final IUserAPI api;
 
   // 本地源
-  final IUserLocalSource userSource;
+  final IUserLocal userSource;
 
   // 环境数据
   final IEnvInfoSource envSource;
@@ -50,7 +51,7 @@ class UserRepoImpl extends IUserRepo {
       return Right(null);
     } catch (e, s) {
       return Left(UnknownFailure(
-          'UserRepoImpl._processLoginOrRegister\napi[$api]\ne[$e]', s));
+          'UserRepoImpl._processLoginOrRegister\napi[$api}]\ne[$e]', s));
     }
   }
 

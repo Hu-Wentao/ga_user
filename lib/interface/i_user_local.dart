@@ -7,7 +7,7 @@ import 'dto/user_dto.dart';
 
 ///
 /// 存储用户信息
-abstract class IUserLocalSource {
+abstract class IUserLocal {
   static const k_cur_user = 'k_cur_user';
 
   /// 获取当前已登陆用户

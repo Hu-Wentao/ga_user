@@ -5,9 +5,9 @@
 
 import 'package:ga_user/domain/repositories/i_user_repo.dart';
 import 'package:ga_user/infrastructure/user_api_impl.dart';
-import 'package:ga_user/infrastructure/user_local_source.dart';
+import 'package:ga_user/infrastructure/user_local_impl.dart';
 import 'package:ga_user/interface/i_user_api.dart';
-import 'package:ga_user/interface/i_user_source.dart';
+import 'package:ga_user/interface/i_user_local.dart';
 import 'package:ga_user/interface/user_repo_impl.dart';
 import 'package:gat_env_info/interface/i_env_info_source.dart';
 import 'package:gat_env_info/profile/env_info_package.dart';
@@ -20,6 +20,10 @@ import 'user_package.iconfig.dart';
 GetIt _g = GetIt.I;
 
 ///
+/// 本模块依赖
+/// [IHttp] 请确保你的项目已经注册 IHttp
+/// ----------------
+///
 /// [pkgEnv] 建议仅供测试添加, 不赋值时默认使用全局EnvConfig
 ///
 /// 以下bool型变量如果设为false,则表示你需要手动实现并注册对应的接口,
@@ -28,30 +32,45 @@ GetIt _g = GetIt.I;
 /// [openIUserAPI] 用户API实现, 默认false! 请参照源码,实现自己的IUserAPI
 ///
 /// [openIUserRepo] 是否开启IUserRepo, 默认true
-/// [openIUserLocalSource] 本地用户存储实现, 默认true
-/// [openIEnvInfoSource] 是否使用默认的IEnvInfoSource实现, 默认true
+/// [openIUserLocal] 本地用户存储实现, 默认true
+/// [openIEnvInfo] 是否使用自带的IEnvInfoSource实现, 默认true
 ///
+/// [httpImplName] 用于指定所使用的IHttp的instanceName
 /// -- 暂不支持开关UseCase
 ///
 /// 这是一个开放型的模块, 如果你希望构建一个只对外部提供UseCase的模块,
 /// 则请注意将内部注册的模块添加特定的用例名
 class UserPackage extends IGetArchPackage {
   final bool openIUserRepo;
-  final bool openIUserLocalSource;
+  final bool openIUserLocal;
   final bool openIUserAPI;
-  final bool openIEnvInfoSource;
+  final bool openIEnvInfo;
+
+  final String httpImplName;
+
   UserPackage({
     EnvConfig pkgEnv,
     this.openIUserAPI: false,
-    this.openIUserLocalSource: true,
+    this.openIUserLocal: true,
     this.openIUserRepo: true,
-    this.openIEnvInfoSource: true,
+    this.openIEnvInfo: true,
+    this.httpImplName,
   }) : super(pkgEnv);
-
+  @override
+  Map<String, bool> get printBoolStateWithRegTypeName => {
+        'IUserAPI': openIUserAPI,
+        'IUserRepo': openIUserRepo,
+        'IEnvInfoSource': openIEnvInfo,
+        'IUserLocalSource': openIUserLocal,
+      };
+  @override
+  Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => {
+        'httpImplName': '$httpImplName',
+      };
   @override
   Future<void> init(EnvConfig env, bool printConfig) async {
     // 在这里加载本模块默认的基础设施实现
-    if (openIEnvInfoSource) await EnvInfoPackage().init(env, printConfig);
+    if (openIEnvInfo) await EnvInfoPackage().init(env, printConfig);
     return await super.init(env, printConfig);
   }
 
@@ -61,16 +80,18 @@ class UserPackage extends IGetArchPackage {
 
   @override
   Future<void> initPackageDI(EnvConfig config) async {
-    if (openIUserLocalSource)
-      _g.registerLazySingleton<IUserLocalSource>(
-          () => UserLocalSource(_g<IStorage>()));
+    if (openIUserLocal)
+      _g.registerLazySingleton<IUserLocal>(() => UserLocalImpl(_g<IStorage>()));
 
+    // 手动配置[instanceName],由于dart无法使用反射,
+    // 因此配置instanceName和控制开关,仍需手动编写代码 (可以在自动生成的代码基础上进行修改)
     if (openIUserAPI)
-      _g.registerLazySingleton<IUserAPI>(() => UserAPI(_g<IHttp>()));
+      _g.registerLazySingleton<IUserAPI>(
+          () => UserAPIImpl(_g.get<IHttp>(instanceName: httpImplName)));
 
     if (openIUserRepo)
       _g.registerLazySingleton<IUserRepo>(() => UserRepoImpl(
-            _g<IUserLocalSource>(),
+            _g<IUserLocal>(),
             _g<IUserAPI>(),
             _g<IEnvInfoSource>(),
           ));
@@ -78,16 +99,6 @@ class UserPackage extends IGetArchPackage {
     // 用例注册
     await initDI(config.envSign);
   }
-
-  @override
-  Map<String, bool> get printBoolStateWithRegTypeName => {
-        'IUserAPI': openIUserAPI,
-        'IUserRepo': openIUserRepo,
-        'IEnvInfoSource': openIEnvInfoSource,
-        'IUserLocalSource': openIUserLocalSource,
-      };
-  @override
-  Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => null;
 }
 
 /// 在这里可以使用injectable自动生成DI代码,

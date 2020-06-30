@@ -8,10 +8,10 @@ import 'package:get_arch_core/interface/i_common_interface.dart';
 
 /// 请根据自己项目的情况手动设定API, 本例只是做代码演示
 //@LazySingleton(as: IUserAPI) // 手动注册
-class UserAPI implements IUserAPI {
+class UserAPIImpl implements IUserAPI {
   final IHttp _http;
 
-  UserAPI(this._http);
+  UserAPIImpl(this._http);
 
   @override
   Future login(IDto dto) => _http.post('/user/login', dto);

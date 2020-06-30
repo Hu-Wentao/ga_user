@@ -15,7 +15,6 @@ class UserLogin extends UseCase<Unit, User> {
   final IUserRepo userRepo;
   UserLogin(this.userRepo);
   @override
-  Future<Either<Failure, Unit>> call(User p) async {
-    return await userRepo.queryWithEmail(p);
-  }
+  Future<Either<Failure, Unit>> call(User p) async =>
+      await userRepo.queryWithEmail(p);
 }

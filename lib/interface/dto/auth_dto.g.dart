@@ -6,6 +6,7 @@ part of 'auth_dto.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+// ignore: non_constant_identifier_names
 _$_AuthDto _$_$_AuthDtoFromJson(Map<String, dynamic> json) {
   return _$_AuthDto(
     email: json['email'] as String,
