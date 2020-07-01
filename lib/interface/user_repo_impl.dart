@@ -18,7 +18,6 @@ import 'i_user_local.dart';
 
 //@LazySingleton(as: IUserRepo) // 手动注册
 class UserRepoImpl extends IUserRepo {
-  EnvInfo env;
   // 网络源
   final IUserAPI api;
 
@@ -42,12 +41,14 @@ class UserRepoImpl extends IUserRepo {
   Future<Either<Failure, Unit>> _processLoginOrRegister(
       bool isLogin, User p) async {
     try {
-      env ??= await envSource.getEnvInfo();
+      final env = await envSource.getEnvInfo();
       final authDto =
           AuthDto.fromDomain(p.email, p.password, EnvInfoDto.fromDomain(env));
-      final jsonData =
+      // 从网络获取数据
+      final jsData =
           isLogin ? await api.login(authDto) : await api.register(authDto);
-      userSource.setCurUserDto(UserDto.fromJson(jsonData));
+      // 缓存到本地
+      userSource.setCurUserDto(UserDto.fromJson(jsData));
       return Right(null);
     } catch (e, s) {
       return Left(UnknownFailure(

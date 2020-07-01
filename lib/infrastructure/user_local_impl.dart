@@ -19,9 +19,9 @@ class UserLocalImpl extends IUserLocal {
   UserDto getCurUserDto() {
     if(_cacheDto!=null) return _cacheDto;
 
-    final jString = storage.getJson(IUserLocal.k_cur_user);
-    if (jString == null) return null;
-    return UserDto.fromJson(jString);
+    final js = storage.getJson(IUserLocal.k_cur_user);
+    if (js == null) return null;
+    return UserDto.fromJson(js);
   }
 
   @override
