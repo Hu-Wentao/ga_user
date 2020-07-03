@@ -3,40 +3,44 @@
 // Date  : 2020/3/29
 // Time  : 18:07
 
-import 'package:dartz/dartz.dart';
-import 'package:get_arch_core/domain/error/failures.dart';
+import 'package:get_arch_core/get_arch_part.dart';
 
-Either<ValueFailure<String>, String> validateEmailAddress(String input) {
-  if (input == null && input == '')
-    return left(ValueFailure.invalidEmail(failedValue: '输入值不能为空'));
-  const emailRegex =
-  r"""^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""";
-  if (RegExp(emailRegex).hasMatch(input)) {
-    return right(input);
-  } else {
-    return left(ValueFailure.invalidEmail(failedValue: input));
-  }
+// todo 移动到 core中
+class ValidateError extends Error with ValidationError {
+  @override
+  final String errorDescription;
+  ValidateError(this.errorDescription);
 }
 
-Either<ValueFailure<String>, String> validatePassword(String input) {
-  if (input == null && input == '')
-    return left(ValueFailure.invalidEmail(failedValue: '输入值不能为空'));
-  //这里还可以添加更多的自定义规则,如 "不能是纯数字"等
-  if (input.length >= 6) {
-    return right(input);
-  } else {
-    return left(ValueFailure.shortPassword(failedValue: input));
-  }
-}
+// todo 移动到 core中
+/// 验证值不为null或空
+Validator_<String> vStrNotEmpty([String errMsg = '字符串不能为null或空']) =>
+    Verify.property((str) => str?.isNotEmpty ?? false,
+        error: ValidateError(errMsg));
+// todo 移动到 core中
+/// 验证值的长度在区间 [min,max] 内
+Validator_<String> vStrLength([min = 0, max = 256, String errMsg]) =>
+    Verify.property((str) => str.length >= min && str.length <= max,
+        error: ValidateError(errMsg ?? '字符串长度不在区间[$min,$max]内'));
 
-Either<ValueFailure<String>, String> validatePhoneNumber(String input) {
-  if (input == null && input == '')
-    return left(ValueFailure.invalidEmail(failedValue: '输入值不能为空'));
+const _emailRegex =
+    r"""^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""";
 
-  //这里还可以添加更多的自定义规则,如 "不能是纯数字"等
-  if (input.length == 11 && input.startsWith('1')) {
-    return right(input);
-  } else {
-    return left(ValueFailure.invalidPhoneNumber(failedValue: input));
-  }
-}
+/// 检查邮箱是否合规
+Validator_<String> vEmail({String onEmpty, String onNotEmail}) => Verify.all([
+      vStrNotEmpty(onEmpty),
+      RegExp(_emailRegex).matchOr(ValidateError(onNotEmail)),
+    ]);
+
+Validator_<String> vPassword({String onEmpty, String onWrongLength}) =>
+    Verify.all([
+      vStrNotEmpty(onEmpty ?? '密码不能为空'),
+      vStrLength(6, 32, onWrongLength ?? '密码长度必须在6到32位之间'),
+    ]);
+
+Validator_<String> vPhoneNumber(
+        {String onEmpty: '手机号不能为空', String onWrongLength: '手机号长度错误'}) =>
+    Verify.all([
+      vStrNotEmpty(onEmpty),
+      vStrLength(11, 11, onWrongLength),
+    ]);

@@ -16,7 +16,7 @@ abstract class IUserRepo {
 //  Future<Either<Failure, Unit>> delete(User param);
 
   /// 更新用户资料
-  Future<Either<Failure, User>> update(User param);
+  Future<Either<Failure, Unit>> update(User param);
 
   @Deprecated('请使用 query()')
   Future<Either<Failure, String>> queryUid();

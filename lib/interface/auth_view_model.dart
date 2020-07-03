@@ -2,11 +2,10 @@
 // Email : hu.wentao@outlook.com
 // Date  : 2020/3/3
 // Time  : 23:41
-import 'package:ga_user/application/login.dart';
-import 'package:ga_user/application/register.dart';
+import 'package:ga_user/application/user_login.dart';
+import 'package:ga_user/application/user_register.dart';
 import 'package:ga_user/domain/entities/user.dart';
 import 'package:ga_user/domain/model/auth_model.dart';
-import 'package:ga_user/domain/value_objects.dart';
 import 'package:get_arch_core/get_arch_core.dart';
 import 'package:get_state/get_state.dart';
 
@@ -25,11 +24,11 @@ class AuthVm extends ViewModel<AuthM> {
 
   bool get isPwdEqual => m.isPwdEqual;
 
-  EmailAddress get emailAddress => m.emailAddress;
+  String get email => m.emailAddress;
 
-  Password get password => m.password;
+  String get password => m.password;
 
-  Password get rePassword => m.rePassword;
+  String get rePwd => m.rePwd;
 
   // on 开头的方法都无需check,因为不耗时
   onToggleLoginOrRegister() {
@@ -45,21 +44,21 @@ class AuthVm extends ViewModel<AuthM> {
     notifyListeners();
   }
 
-  onToggleAutoValidate() {
+  openAutoValidate() {
     m.isAutoValidate = true;
     notifyListeners();
   }
 
   onEmailChanged(String value) {
-    m.emailAddress = EmailAddress(value);
+    m.emailAddress = value;
   }
 
   onPasswordChanged(String value) {
-    m.password = Password(value);
+    m.password = value;
   }
 
   onRePwdChanged(String value) {
-    m.rePassword = Password(value);
+    m.rePwd = value;
   }
 
   /// 登陆
@@ -67,17 +66,10 @@ class AuthVm extends ViewModel<AuthM> {
   Future<bool> loginOrRegister({bool isLogin}) async {
     if (vmCheckAndSetBusy) return null;
     // 开启自动View检查输入参数
-    onToggleAutoValidate();
-    // 检查待发送的参数
-    bool isEmailValidate = emailAddress?.isValid() ?? false;
-    bool isPwdValidate = password?.isValid() ?? false;
-    if (!(isEmailValidate && isPwdValidate)) {
-      vmSetIdle;
-      return null;
-    }
+    openAutoValidate();
 
     var result;
-    User param = User.authWithEmail(emailAddress, password);
+    User param = User.authWithEmail(email, password);
     if (isLogin ?? m.isLogin) {
       (await userLogin(param)).fold((err) {
         // 网络错误,app版本过低等导致

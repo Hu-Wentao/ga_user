@@ -15,7 +15,7 @@ import 'package:get_arch_core/domain/env_config.dart';
 import 'package:get_arch_core/get_arch_core.dart';
 import 'package:get_arch_core/get_arch_part.dart';
 
-import 'user_package.iconfig.dart';
+import '../ga_user.dart';
 
 GetIt _g = GetIt.I;
 
@@ -36,7 +36,17 @@ GetIt _g = GetIt.I;
 /// [openIEnvInfo] 是否使用自带的IEnvInfoSource实现, 默认true
 ///
 /// [httpImplName] 用于指定所使用的IHttp的instanceName
-/// -- 暂不支持开关UseCase
+///
+/// [specProfile] 手动配置用例开关(不建议新手使用)
+/// ```dart
+///  UserPackage(
+///   specProfile: {
+///   // 不写即默认开启(true)
+///     'UserLogin': false,
+///   }
+///  ),
+///
+/// ```
 ///
 /// 这是一个开放型的模块, 如果你希望构建一个只对外部提供UseCase的模块,
 /// 则请注意将内部注册的模块添加特定的用例名
@@ -48,6 +58,8 @@ class UserPackage extends IGetArchPackage {
 
   final String httpImplName;
 
+  final Map<String, bool> specProfile;
+
   UserPackage({
     EnvConfig pkgEnv,
     this.openIUserAPI: false,
@@ -55,14 +67,16 @@ class UserPackage extends IGetArchPackage {
     this.openIUserRepo: true,
     this.openIEnvInfo: true,
     this.httpImplName,
-  }) : super(pkgEnv);
+    this.specProfile: const {},
+  })  : assert(specProfile != null),
+        super(pkgEnv);
   @override
   Map<String, bool> get printBoolStateWithRegTypeName => {
         'IUserAPI': openIUserAPI,
         'IUserRepo': openIUserRepo,
         'IEnvInfoSource': openIEnvInfo,
         'IUserLocalSource': openIUserLocal,
-      };
+      }..addAll(specProfile);
   @override
   Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => {
         'httpImplName': '$httpImplName',
@@ -96,14 +110,21 @@ class UserPackage extends IGetArchPackage {
             _g<IEnvInfoSource>(),
           ));
 
-    // 用例注册
-    await initDI(config.envSign);
+    // 用例注册 (均默认开启)
+    if (specProfile['UserUpdateInfo'] ?? true)
+      _g.registerLazySingleton<UserUpdateInfo>(
+          () => UserUpdateInfo(_g<IUserRepo>()));
+    if (specProfile['UserLogin'] ?? true)
+      _g.registerLazySingleton<UserLogin>(() => UserLogin(_g<IUserRepo>()));
+    if (specProfile['UserRegister'] ?? true)
+      _g.registerLazySingleton<UserRegister>(
+          () => UserRegister(_g<IUserRepo>()));
   }
 }
 
-/// 在这里可以使用injectable自动生成DI代码,
-/// 直接将生成的代码复制到initPackageDI()中, 便于手动控制注册情况
-@injectableInit
-Future<void> initDI(EnvSign env) async {
-  $initGetIt(_g, environment: env.toString());
-}
+///// 在这里可以使用injectable自动生成DI代码,
+///// 直接将生成的代码复制到initPackageDI()中, 便于通过配置参数控制依赖注入
+//@injectableInit
+//Future<void> initDI(EnvSign env) async {
+//  $initGetIt(_g, environment: env.toString());
+//}

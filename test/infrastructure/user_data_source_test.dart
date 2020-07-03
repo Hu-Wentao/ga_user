@@ -2,6 +2,7 @@
 // Email : hu.wentao@outlook.com
 // Date  : 2020/2/29
 // Time  : 17:57
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ga_user/interface/dto/user_dto.dart';
 import 'package:ga_user/interface/i_user_local.dart';
@@ -11,7 +12,10 @@ import 'package:get_arch_core/get_arch_core.dart';
 
 main() {
   setUp(() async {
-    await initDI(EnvSign.test);
+    WidgetsFlutterBinding.ensureInitialized();
+    await GetArchApplication.run(EnvConfig.sign(EnvSign.prod), packages: [
+      UserPackage(),
+    ]);
   });
   test("规范测试UserSource", () async {
     IUserLocal source = GetIt.I<IUserLocal>();

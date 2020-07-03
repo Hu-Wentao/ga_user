@@ -3,8 +3,8 @@
 // Date  : 2020/3/1
 // Time  : 9:35
 import 'package:flutter/material.dart';
-import 'package:ga_user/application/login.dart';
-import 'package:ga_user/application/register.dart';
+import 'package:ga_user/application/user_login.dart';
+import 'package:ga_user/application/user_register.dart';
 import 'package:ga_user/domain/model/auth_model.dart';
 import 'package:ga_user/interface/auth_view_model.dart';
 import 'package:get_arch_core/get_arch_part.dart';

@@ -15,4 +15,6 @@ abstract class IUserLocal {
 
   /// 存储用户到本地，并设为当前已登陆用户
   setCurUserDto(UserDto dto);
+
+  updateWith(UserDto dto);
 }

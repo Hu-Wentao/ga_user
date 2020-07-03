@@ -5,7 +5,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:ga_user/domain/entities/user.dart';
 import 'package:ga_user/domain/repositories/i_user_repo.dart';
-import 'package:gat_env_info/domain/model.dart';
 import 'package:gat_env_info/interface/dto/dto.dart';
 import 'package:gat_env_info/interface/i_env_info_source.dart';
 import 'package:get_arch_core/domain/error/failures.dart';
@@ -22,12 +21,12 @@ class UserRepoImpl extends IUserRepo {
   final IUserAPI api;
 
   // 本地源
-  final IUserLocal userSource;
+  final IUserLocal local;
 
   // 环境数据
   final IEnvInfoSource envSource;
 
-  UserRepoImpl(this.userSource, this.api, this.envSource);
+  UserRepoImpl(this.local, this.api, this.envSource);
 
   @override
   Future<Either<Failure, Unit>> queryWithEmail(User param) async =>
@@ -45,21 +44,23 @@ class UserRepoImpl extends IUserRepo {
       final authDto =
           AuthDto.fromDomain(p.email, p.password, EnvInfoDto.fromDomain(env));
       // 从网络获取数据
-      final jsData =
-          isLogin ? await api.login(authDto) : await api.register(authDto);
+      final jsData = await (isLogin
+          ? await api.login(authDto)
+          : await api.register(authDto));
       // 缓存到本地
-      userSource.setCurUserDto(UserDto.fromJson(jsData));
+      local.setCurUserDto(UserDto.fromJson(jsData));
       return Right(null);
     } catch (e, s) {
       return Left(UnknownFailure(
-          'UserRepoImpl._processLoginOrRegister\napi[$api}]\ne[$e]', s));
+          'UserRepoImpl._processLoginOrRegister\napi[${api.runtimeType}]\ne[$e]',
+          s));
     }
   }
 
   @override
   Future<Either<Failure, User>> query() async {
     try {
-      final u = userSource.getCurUserDto().toDomain();
+      final u = local.getCurUserDto().toDomain();
       if (u == null) return left(NotLoginFailure());
       return right(u);
     } catch (e, s) {
@@ -68,9 +69,14 @@ class UserRepoImpl extends IUserRepo {
   }
 
   @override
-  Future<Either<Failure, User>> update(User user) async {
+  Future<Either<Failure, Unit>> update(User user) async {
     try {
-      // todo
+      // 网络请求
+      final dto = UserDto.fromDomain(user);
+      await api.updateInfo(dto);
+      // 刷新本地缓存
+      await local.setCurUserDto(dto);
+      return right(null);
     } on Failure catch (f) {
       return left(f);
     } catch (e, s) {

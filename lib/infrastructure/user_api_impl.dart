@@ -26,4 +26,7 @@ class UserAPIImpl implements IUserAPI {
 
   @override
   Future register(IDto dto) async => (await _http.post('/v1/user/register', dto))['data'];
+
+  @override
+  Future updateInfo(IDto dto)  async => (await _http.post('/v1/user/changeInfo', dto))['data'];
 }

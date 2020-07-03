@@ -13,4 +13,6 @@ abstract class IUserAPI {
   Future register(IDto dto);
 
   Future login(IDto dto);
+
+  Future updateInfo(IDto dto);
 }

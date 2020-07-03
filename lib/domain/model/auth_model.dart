@@ -2,21 +2,19 @@
 // Email : hu.wentao@outlook.com
 // Date  : 2020/6/27
 // Time  : 12:32
-import 'package:ga_user/domain/value_objects.dart';
-
-/// 由于ViewModel中
+///
 class AuthM {
-  EmailAddress emailAddress;
+  String emailAddress;
 
-  Password password;
+  String password;
 
-  Password rePassword;
+  String rePwd;
 
   // view中,密码是否隐藏
   bool isPwdObscure = true;
 
   // pwd和rePwd是否匹配
-  bool get isPwdEqual => password == rePassword;
+  bool get isPwdEqual => password == rePwd;
 
   // view当前状态(登陆还是注册
   bool isLogin = true;

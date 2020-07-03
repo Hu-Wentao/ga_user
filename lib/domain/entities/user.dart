@@ -5,8 +5,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get_arch_core/domain/common_interface.dart';
 
-import '../value_objects.dart';
-
 ///
 /// 用户实体类
 class User extends IEntity {
@@ -17,7 +15,7 @@ class User extends IEntity {
   final String nickname;
 
   // 用户邮箱
-  final EmailAddress email;
+  final String email;
 
   // 用户注册时间 <服务器生成>
   final int regTime;
@@ -25,10 +23,10 @@ class User extends IEntity {
   // 登陆口令 <服务器生成>
   final String token;
 
-  final Password password;
+  final String password;
 
   // 手机号
-  final PhoneNumber phone;
+  final String phone;
 
   // 头像的url
   final String avatar;
@@ -65,23 +63,40 @@ class User extends IEntity {
   ///
   /// 通过邮箱登陆/注册的构造方法
   User.authWithEmail(
-    EmailAddress email,
-    Password password,
+    String email,
+    String password,
   ) : this._(email: email, password: password);
 
   ///
   /// 通过手机号..
   User.authWithPhone(
-    PhoneNumber phone,
-    Password password,
+    String phone,
+    String password,
   ) : this._(phone: phone, password: password);
 
+  User.updateInfo({
+    String nickname,
+    String avatar,
+    Sex sex,
+//    EmailAddress email,
+//    String token,
+//    Password password,
+//    PhoneNumber phone,
+  }) : this._(
+          nickname: nickname,
+//          email: email,
+//          token: token,
+//          password: password,
+//          phone: phone,
+          avatar: avatar,
+          sex: sex,
+        );
   @override
   List<Object> get props =>
       [id, nickname, email, regTime, phone, avatar, sex, token];
 }
 
-enum Sex{
+enum Sex {
   male,
   female,
 }

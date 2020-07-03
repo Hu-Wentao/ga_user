@@ -17,9 +17,11 @@ class UserLocalImpl extends IUserLocal {
 
   @override
   UserDto getCurUserDto() {
-    if(_cacheDto!=null) return _cacheDto;
+    if (_cacheDto != null) return _cacheDto;
 
     final js = storage.getJson(IUserLocal.k_cur_user);
+    // 由于Dio异常拦截器没有StackTrace,
+    // 如果拦截器调用了这里的方法并抛出异常且没有另写try..catch, 排查起来十分困难
     if (js == null) return null;
     return UserDto.fromJson(js);
   }
@@ -30,5 +32,19 @@ class UserLocalImpl extends IUserLocal {
 
     final js = dto.toJson();
     storage.setJson(IUserLocal.k_cur_user, js);
+  }
+
+  /// 仅支持更新部分属性
+  @override
+  updateWith(UserDto d) {
+    final cur = getCurUserDto();
+    final n = cur.copyWith(
+      username: d.username,
+      email: d.email,
+      token: d.token,
+      phone: d.phone,
+      avatar: d.avatar,
+    );
+    setCurUserDto(n);
   }
 }

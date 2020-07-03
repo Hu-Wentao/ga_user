@@ -4,7 +4,6 @@
 // Time  : 0:42
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ga_user/domain/value_objects.dart';
 import 'package:gat_env_info/interface/dto/dto.dart';
 import 'package:get_arch_core/interface/i_common_interface.dart';
 
@@ -21,11 +20,11 @@ abstract class AuthDto extends IDto with _$AuthDto {
     EnvInfoDto env,
   }) = _AuthDto;
 
-  factory AuthDto.fromDomain(EmailAddress email, Password password,
+  factory AuthDto.fromDomain(String email, String password,
       EnvInfoDto envDto) =>
       AuthDto(
-        email: email.getOrCrash(),
-        password: password.getOrCrash(),
+        email: email,
+        password: password,
         env: envDto,
       );
 

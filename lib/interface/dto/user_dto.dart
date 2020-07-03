@@ -5,7 +5,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ga_user/domain/entities/user.dart';
-import 'package:ga_user/domain/value_objects.dart';
 import 'package:get_arch_core/interface/i_common_interface.dart';
 
 part 'user_dto.freezed.dart';
@@ -18,21 +17,21 @@ abstract class UserDto extends IDto with _$UserDto {
     String username,
     String email,
     String token,
-    int regTime,
     String phone,
     String avatar,
     int sex,
+    int regTime,
   }) = _UserDto;
 
   factory UserDto.fromDomain(User u) => UserDto(
         id: u.id,
         username: u.nickname,
-        email: u.email.getOrElse(null),
+        email: u.email,
         token: u.token,
         regTime: u.regTime,
-        phone: u.phone.getOrElse(null),
+        phone: u.phone,
         avatar: u.avatar,
-        sex: u.sex.index,
+        sex: u.sex?.index,
       );
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
@@ -43,10 +42,10 @@ extension UserDtoX on UserDto {
   User toDomain() => User.fromResult(
         id: id,
         nickname: username,
-        email: email == null ? null : EmailAddress(email),
+        email: email == null ? null : email,
         token: token,
         regTime: regTime,
-        phone: phone == null ? null : PhoneNumber(phone),
+        phone: phone == null ? null : phone,
         avatar: avatar,
         sex: Sex.values[sex],
       );

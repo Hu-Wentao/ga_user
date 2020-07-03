@@ -3,9 +3,9 @@ library ga_user;
 export 'domain/entities/user.dart';
 export 'domain/repositories/i_user_repo.dart';
 
-export 'application/login.dart';
-export 'application/register.dart';
-export 'application/update.dart';
+export 'application/user_login.dart';
+export 'application/user_register.dart';
+export 'application/user_update_info.dart';
 
 export 'interface/i_user_api.dart';
 export 'interface/i_user_local.dart';
