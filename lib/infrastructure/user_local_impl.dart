@@ -4,7 +4,7 @@
 // Time  : 12:25
 import 'package:ga_user/interface/dto/user_dto.dart';
 import 'package:ga_user/interface/i_user_local.dart';
-import 'package:get_arch_core/get_arch_core.dart';
+import 'package:get_arch_quick_start/interface/i_storage.dart';
 
 /// 实现类
 /// <有缓存>

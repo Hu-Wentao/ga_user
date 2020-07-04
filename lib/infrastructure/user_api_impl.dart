@@ -4,7 +4,7 @@
 // Time  : 23:31
 import 'package:ga_user/interface/i_user_api.dart';
 import 'package:get_arch_core/get_arch_core.dart';
-import 'package:get_arch_core/interface/i_common_interface.dart';
+import 'package:get_arch_quick_start/interface/i_network.dart';
 
 /// 请根据自己项目的情况手动设定API, 本例只是做代码演示
 /// API 属于网络数据源, 不需要try..catch,只需要返回所需的数据即可

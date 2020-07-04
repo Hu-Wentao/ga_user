@@ -6,8 +6,8 @@
 import 'package:ga_user/domain/entities/user.dart';
 import 'package:ga_user/ga_user.dart';
 import 'package:get_arch_core/application/i_usecase.dart';
-import 'package:get_arch_core/domain/error/failures.dart';
-import 'package:get_arch_core/get_arch_part.dart';
+import 'package:get_arch_quick_start/quick_start_part.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:injectable/injectable.dart';
 
 ///

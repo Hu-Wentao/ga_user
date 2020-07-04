@@ -5,7 +5,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ga_user/domain/entities/user.dart';
-import 'package:get_arch_core/interface/i_common_interface.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 
 part 'user_dto.freezed.dart';
 part 'user_dto.g.dart';

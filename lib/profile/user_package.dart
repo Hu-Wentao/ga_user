@@ -13,7 +13,7 @@ import 'package:gat_env_info/interface/i_env_info_source.dart';
 import 'package:gat_env_info/profile/env_info_package.dart';
 import 'package:get_arch_core/domain/env_config.dart';
 import 'package:get_arch_core/get_arch_core.dart';
-import 'package:get_arch_core/get_arch_part.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 
 import '../ga_user.dart';
 

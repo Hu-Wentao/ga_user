@@ -4,7 +4,7 @@
 // Time  : 18:10
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ga_user/domain/value_validators.dart';
-import 'package:get_arch_core/get_arch_part.dart' show ValidatorUtils;
+import 'package:get_arch_quick_start/quick_start.dart'; // 这里export了 .verify()
 
 main() {
   test("测试邮箱验证器", () {

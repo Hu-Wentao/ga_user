@@ -7,8 +7,7 @@ import 'package:ga_user/application/user_login.dart';
 import 'package:ga_user/application/user_register.dart';
 import 'package:ga_user/domain/model/auth_model.dart';
 import 'package:ga_user/interface/auth_view_model.dart';
-import 'package:get_arch_core/get_arch_part.dart';
-import 'package:get_arch_core/interface/i_dialog.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:get_state/get_state.dart';
 
 import 'auth_view.dart';

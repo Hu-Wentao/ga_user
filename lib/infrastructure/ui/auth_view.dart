@@ -6,7 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:ga_user/domain/value_validators.dart';
 import 'package:ga_user/interface/auth_view_model.dart';
-import 'package:get_arch_core/get_arch_part.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:get_state/get_state.dart';
 import 'package:groovin_material_icons/groovin_material_icons.dart';
 

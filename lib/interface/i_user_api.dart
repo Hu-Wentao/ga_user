@@ -3,7 +3,8 @@
 // Date  : 2020/6/13
 // Time  : 21:11
 
-import 'package:get_arch_core/interface/i_common_interface.dart';
+
+import 'package:get_arch_quick_start/quick_start.dart';
 
 ///
 /// API 属于网络源

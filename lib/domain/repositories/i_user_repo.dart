@@ -4,7 +4,8 @@
 // Time  : 13:13
 import 'package:dartz/dartz.dart';
 import 'package:ga_user/domain/entities/user.dart';
-import 'package:get_arch_core/domain/error/failures.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
+import 'package:get_arch_quick_start/quick_start_part.dart';
 
 ///
 /// 用户相关操作的repo

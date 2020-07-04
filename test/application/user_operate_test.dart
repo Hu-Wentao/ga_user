@@ -15,6 +15,8 @@ import 'package:ga_user/ga_user.dart';
 import 'package:ga_user/interface/i_user_local.dart';
 import 'package:get_arch_core/domain/env_config.dart';
 import 'package:get_arch_core/get_arch_core.dart';
+import 'package:get_arch_quick_start/interface/i_network.dart';
+import 'package:get_arch_quick_start/interface/i_storage.dart';
 import 'package:mockito/mockito.dart';
 
 class MockUserDataSource extends Mock implements IUserLocal {}

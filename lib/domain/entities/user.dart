@@ -3,7 +3,7 @@
 // Date  : 2020/1/18
 // Time  : 12:41
 import 'package:flutter/foundation.dart';
-import 'package:get_arch_core/domain/common_interface.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 
 ///
 /// 用户实体类

@@ -5,7 +5,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gat_env_info/interface/dto/dto.dart';
-import 'package:get_arch_core/interface/i_common_interface.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 
 part 'auth_dto.freezed.dart';
 part 'auth_dto.g.dart';
