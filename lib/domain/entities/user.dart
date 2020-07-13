@@ -28,7 +28,7 @@ class User extends IEntity {
   // 手机号
   final String phone;
 
-  // 头像的url
+  // 头像图片的id
   final String avatar;
 
   // 性别 0男 1女,这里没有用bool,因为...性别可能会有很多种

@@ -14,7 +14,8 @@ class AuthVm extends ViewModel<AuthM> {
   final UserLogin userLogin;
   final UserRegister userRegister;
 
-  AuthVm(this.userLogin, this.userRegister, this.dialog);
+  AuthVm(this.userLogin, this.userRegister, this.dialog)
+      : super(() async => AuthM());
 
   bool get isLogin => m.isLogin;
 

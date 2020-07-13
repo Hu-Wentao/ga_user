@@ -20,19 +20,19 @@ class _$UserDtoTearOff {
       String username,
       String email,
       String token,
-      int regTime,
       String phone,
       String avatar,
-      int sex}) {
+      int sex,
+      int regTime}) {
     return _UserDto(
       id: id,
       username: username,
       email: email,
       token: token,
-      regTime: regTime,
       phone: phone,
       avatar: avatar,
       sex: sex,
+      regTime: regTime,
     );
   }
 }
@@ -45,10 +45,10 @@ mixin _$UserDto {
   String get username;
   String get email;
   String get token;
-  int get regTime;
   String get phone;
   String get avatar;
   int get sex;
+  int get regTime;
 
   Map<String, dynamic> toJson();
   $UserDtoCopyWith<UserDto> get copyWith;
@@ -62,10 +62,10 @@ abstract class $UserDtoCopyWith<$Res> {
       String username,
       String email,
       String token,
-      int regTime,
       String phone,
       String avatar,
-      int sex});
+      int sex,
+      int regTime});
 }
 
 class _$UserDtoCopyWithImpl<$Res> implements $UserDtoCopyWith<$Res> {
@@ -81,20 +81,20 @@ class _$UserDtoCopyWithImpl<$Res> implements $UserDtoCopyWith<$Res> {
     Object username = freezed,
     Object email = freezed,
     Object token = freezed,
-    Object regTime = freezed,
     Object phone = freezed,
     Object avatar = freezed,
     Object sex = freezed,
+    Object regTime = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed ? _value.id : id as String,
       username: username == freezed ? _value.username : username as String,
       email: email == freezed ? _value.email : email as String,
       token: token == freezed ? _value.token : token as String,
-      regTime: regTime == freezed ? _value.regTime : regTime as int,
       phone: phone == freezed ? _value.phone : phone as String,
       avatar: avatar == freezed ? _value.avatar : avatar as String,
       sex: sex == freezed ? _value.sex : sex as int,
+      regTime: regTime == freezed ? _value.regTime : regTime as int,
     ));
   }
 }
@@ -108,10 +108,10 @@ abstract class _$UserDtoCopyWith<$Res> implements $UserDtoCopyWith<$Res> {
       String username,
       String email,
       String token,
-      int regTime,
       String phone,
       String avatar,
-      int sex});
+      int sex,
+      int regTime});
 }
 
 class __$UserDtoCopyWithImpl<$Res> extends _$UserDtoCopyWithImpl<$Res>
@@ -128,20 +128,20 @@ class __$UserDtoCopyWithImpl<$Res> extends _$UserDtoCopyWithImpl<$Res>
     Object username = freezed,
     Object email = freezed,
     Object token = freezed,
-    Object regTime = freezed,
     Object phone = freezed,
     Object avatar = freezed,
     Object sex = freezed,
+    Object regTime = freezed,
   }) {
     return _then(_UserDto(
       id: id == freezed ? _value.id : id as String,
       username: username == freezed ? _value.username : username as String,
       email: email == freezed ? _value.email : email as String,
       token: token == freezed ? _value.token : token as String,
-      regTime: regTime == freezed ? _value.regTime : regTime as int,
       phone: phone == freezed ? _value.phone : phone as String,
       avatar: avatar == freezed ? _value.avatar : avatar as String,
       sex: sex == freezed ? _value.sex : sex as int,
+      regTime: regTime == freezed ? _value.regTime : regTime as int,
     ));
   }
 }
@@ -153,10 +153,10 @@ class _$_UserDto implements _UserDto {
       this.username,
       this.email,
       this.token,
-      this.regTime,
       this.phone,
       this.avatar,
-      this.sex});
+      this.sex,
+      this.regTime});
 
   factory _$_UserDto.fromJson(Map<String, dynamic> json) =>
       _$_$_UserDtoFromJson(json);
@@ -170,17 +170,17 @@ class _$_UserDto implements _UserDto {
   @override
   final String token;
   @override
-  final int regTime;
-  @override
   final String phone;
   @override
   final String avatar;
   @override
   final int sex;
+  @override
+  final int regTime;
 
   @override
   String toString() {
-    return 'UserDto(id: $id, username: $username, email: $email, token: $token, regTime: $regTime, phone: $phone, avatar: $avatar, sex: $sex)';
+    return 'UserDto(id: $id, username: $username, email: $email, token: $token, phone: $phone, avatar: $avatar, sex: $sex, regTime: $regTime)';
   }
 
   @override
@@ -196,15 +196,14 @@ class _$_UserDto implements _UserDto {
                 const DeepCollectionEquality().equals(other.email, email)) &&
             (identical(other.token, token) ||
                 const DeepCollectionEquality().equals(other.token, token)) &&
-            (identical(other.regTime, regTime) ||
-                const DeepCollectionEquality()
-                    .equals(other.regTime, regTime)) &&
             (identical(other.phone, phone) ||
                 const DeepCollectionEquality().equals(other.phone, phone)) &&
             (identical(other.avatar, avatar) ||
                 const DeepCollectionEquality().equals(other.avatar, avatar)) &&
             (identical(other.sex, sex) ||
-                const DeepCollectionEquality().equals(other.sex, sex)));
+                const DeepCollectionEquality().equals(other.sex, sex)) &&
+            (identical(other.regTime, regTime) ||
+                const DeepCollectionEquality().equals(other.regTime, regTime)));
   }
 
   @override
@@ -214,10 +213,10 @@ class _$_UserDto implements _UserDto {
       const DeepCollectionEquality().hash(username) ^
       const DeepCollectionEquality().hash(email) ^
       const DeepCollectionEquality().hash(token) ^
-      const DeepCollectionEquality().hash(regTime) ^
       const DeepCollectionEquality().hash(phone) ^
       const DeepCollectionEquality().hash(avatar) ^
-      const DeepCollectionEquality().hash(sex);
+      const DeepCollectionEquality().hash(sex) ^
+      const DeepCollectionEquality().hash(regTime);
 
   @override
   _$UserDtoCopyWith<_UserDto> get copyWith =>
@@ -235,10 +234,10 @@ abstract class _UserDto implements UserDto {
       String username,
       String email,
       String token,
-      int regTime,
       String phone,
       String avatar,
-      int sex}) = _$_UserDto;
+      int sex,
+      int regTime}) = _$_UserDto;
 
   factory _UserDto.fromJson(Map<String, dynamic> json) = _$_UserDto.fromJson;
 
@@ -251,13 +250,13 @@ abstract class _UserDto implements UserDto {
   @override
   String get token;
   @override
-  int get regTime;
-  @override
   String get phone;
   @override
   String get avatar;
   @override
   int get sex;
+  @override
+  int get regTime;
   @override
   _$UserDtoCopyWith<_UserDto> get copyWith;
 }

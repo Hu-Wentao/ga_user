@@ -5,7 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:ga_user/application/user_login.dart';
 import 'package:ga_user/application/user_register.dart';
-import 'package:ga_user/domain/model/auth_model.dart';
 import 'package:ga_user/interface/auth_view_model.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:get_state/get_state.dart';
@@ -26,11 +25,6 @@ class AuthPage extends View<AuthVm> {
         GetIt.I<UserRegister>(),
         GetIt.I<IDialog>(),
       );
-
-  @override
-  void onInitState(AuthVm vm) {
-    vm.vmInitModel(AuthM());
-  }
 
   @override
   Widget build(BuildContext c, AuthVm vm) => Scaffold(body: AuthFormView());

@@ -3,9 +3,9 @@
 // Date  : 2020/2/27
 // Time  : 19:05
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ga_user/domain/entities/user.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_dto.freezed.dart';
 part 'user_dto.g.dart';
@@ -23,15 +23,15 @@ abstract class UserDto extends IDto with _$UserDto {
     int regTime,
   }) = _UserDto;
 
-  factory UserDto.fromDomain(User u) => UserDto(
-        id: u.id,
-        username: u.nickname,
-        email: u.email,
-        token: u.token,
-        regTime: u.regTime,
-        phone: u.phone,
-        avatar: u.avatar,
-        sex: u.sex?.index,
+  factory UserDto.fromDomain(User d) => UserDto(
+        id: d.id,
+        username: d.nickname,
+        email: d.email,
+        token: d.token,
+        phone: d.phone,
+        avatar: d.avatar,
+        sex: d.sex.index,
+        regTime: d.regTime,
       );
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
