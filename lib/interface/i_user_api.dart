@@ -3,6 +3,7 @@
 // Date  : 2020/6/13
 // Time  : 21:11
 
+import 'dart:typed_data';
 
 import 'package:get_arch_quick_start/quick_start.dart';
 
@@ -16,4 +17,10 @@ abstract class IUserAPI {
   Future login(IDto dto);
 
   Future updateInfo(IDto dto);
+
+  Future queryById(String uId);
+
+  Future uploadAvatar(String fullPath);
+
+  Future<Uint8List> queryImg(String imgId);
 }

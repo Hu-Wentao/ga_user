@@ -8,12 +8,11 @@ import 'package:ga_user/ga_user.dart';
 import 'package:get_arch_core/application/i_usecase.dart';
 import 'package:get_arch_quick_start/quick_start_part.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
-import 'package:injectable/injectable.dart';
 
 ///
 /// 用户修改个人信息
 ///
-@lazySingleton
+//@lazySingleton v
 class UserUpdateInfo extends UseCase<Unit, User> {
   final IUserRepo repo;
 

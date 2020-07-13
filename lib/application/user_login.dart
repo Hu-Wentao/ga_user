@@ -11,11 +11,11 @@ import 'package:get_arch_quick_start/quick_start_part.dart';
 
 ///
 /// 用户登陆
-//@lazySingleton
+//@lazySingleton v
 class UserLogin extends UseCase<Unit, User> {
   final IUserRepo userRepo;
   UserLogin(this.userRepo);
   @override
   Future<Either<Failure, Unit>> call(User p) async =>
-      await userRepo.queryWithEmail(p);
+      await userRepo.loginWithEmail(p);
 }
