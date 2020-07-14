@@ -55,5 +55,5 @@ class UserAPIImpl implements IUserAPI {
 
   @override
   Future<Uint8List> queryImg(String imgId) async =>
-      await _http.handleBytesRequest('GET', '$imgId');
+      await _http.handleBytesRequest('GET', '/v1/image/show/$imgId');
 }

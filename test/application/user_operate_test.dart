@@ -4,9 +4,11 @@
 // Time  : 14:52
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ga_user/application/upload_avatar.dart';
 import 'package:ga_user/application/user_login.dart';
 import 'package:ga_user/application/user_register.dart';
 import 'package:ga_user/domain/entities/user.dart';
@@ -17,6 +19,7 @@ import 'package:get_arch_core/domain/env_config.dart';
 import 'package:get_arch_core/get_arch_core.dart';
 import 'package:get_arch_quick_start/interface/i_network.dart';
 import 'package:get_arch_quick_start/interface/i_storage.dart';
+import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:mockito/mockito.dart';
 
 class MockUserDataSource extends Mock implements IUserLocal {}
@@ -48,6 +51,9 @@ class MockStorage extends Mock implements IStorage {}
 class MockUserAPI extends Mock implements IUserAPI {}
 
 main() {
+
+  /// 搭建环境用于测试
+  /// 如果用例注册配置代码完备的话, 可以替换在EnvSign后,运行main中的注册代码
   setUpAll(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await GetArchApplication.run(EnvConfig.sign(EnvSign.dev), packages: [
@@ -91,5 +97,11 @@ main() {
     final result = await uc(User.updateInfo(nickname: 'rename'));
     // assert
     expect(result, null);
+  });
+
+  test('测试头像上传',() async {
+    final uc = GetIt.I<UploadAvatar>();
+    final r = await uc(r'2.png');
+    print('main#$r');
   });
 }
