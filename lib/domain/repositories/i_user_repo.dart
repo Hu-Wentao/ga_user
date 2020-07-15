@@ -34,6 +34,8 @@ abstract class IUserRepo {
   /// UseCase应当保证[imgId]不为空
   Future<Either<Failure, Uint8List>> getAvatar(String imgId);
 
+  Future<Either<Failure, Unit>> logout();
+
 //  // QQ登陆
 //  Future<Either<Failure, Unit>> queryWithQQ();
 //  // WeChat登陆

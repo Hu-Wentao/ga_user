@@ -135,4 +135,17 @@ class UserRepoImpl extends IUserRepo {
       return left(UnknownFailure('UserRepoImpl.getAvatar:\n$e\n', s));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> logout() async {
+    try {
+      // 移除缓存
+      local.setCurUserDto(null);
+      return right(null);
+    } on Failure catch (f) {
+      return left(f);
+    } catch (e, s) {
+      return left(UnknownFailure('UserRepoImpl.logout:\n$e\n', s));
+    }
+  }
 }
