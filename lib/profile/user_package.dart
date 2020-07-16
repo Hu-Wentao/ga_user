@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:ga_user/application/get_avatar.dart';
 import 'package:ga_user/application/get_user.dart';
 import 'package:ga_user/application/upload_avatar.dart';
+import 'package:ga_user/application/user_logout.dart';
 import 'package:ga_user/domain/repositories/i_user_repo.dart';
 import 'package:ga_user/infrastructure/user_api_impl.dart';
 import 'package:ga_user/infrastructure/user_local_impl.dart';
@@ -139,6 +140,8 @@ class UserPackage extends IGetArchPackage {
     if (specProfile['GetAvatar'] ?? true)
       g.registerLazySingleton<GetAvatar>(
           () => GetAvatar(g<IUserRepo>(), g<GetUser>()));
+    if (specProfile['UserLogout'] ?? true)
+      g.registerLazySingleton<UserLogout>(() => UserLogout(g<IUserRepo>()));
   }
 }
 

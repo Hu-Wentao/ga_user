@@ -6,6 +6,7 @@
 import 'package:ga_user/ga_user.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
 
+// v
 class UserLogout extends UseCase<Unit, Unit> {
   final IUserRepo repo;
 

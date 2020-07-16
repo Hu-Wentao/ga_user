@@ -317,6 +317,9 @@ class EditableAvatar extends StatelessWidget {
                         height: 100,
                         textStyle: TextStyle(fontSize: 17, color: Colors.white),
                       );
+                    // 如果是未登录, 应当可以收到 未登陆Error
+
+
                     // 其他情况
                     print('EditableAvatar.build #$data');
                     return FLAvatar(

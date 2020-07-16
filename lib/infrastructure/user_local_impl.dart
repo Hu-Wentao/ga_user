@@ -28,7 +28,7 @@ class UserLocalImpl extends IUserLocal {
 
   @override
   setCurUserDto(UserDto dto) =>
-      _storage.setJson(IUserLocal.k_cur_user, dto.toJson());
+      _storage.setJson(IUserLocal.k_cur_user, dto?.toJson());
 
   /// 仅支持更新部分属性
   @override
