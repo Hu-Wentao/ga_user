@@ -4,7 +4,7 @@
 // Time  : 0:42
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gat_env_info/interface/dto/dto.dart';
+import 'package:get_env_info/interface/dto/dto.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
 
 part 'auth_dto.freezed.dart';

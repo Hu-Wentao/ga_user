@@ -13,6 +13,7 @@ import 'package:get_arch_quick_start/quick_start_part.dart';
 
 ///
 /// [imgId] 为null,  表示获取当前用户的头像
+// 已手动注册
 class GetAvatar extends UseCase<Uint8List, String> {
   final IUserRepo _userRepo;
   final GetUser _getUser;

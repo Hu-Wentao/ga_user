@@ -6,8 +6,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ga_user/infrastructure/user_api_impl.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
-import 'package:get_arch_quick_start/quick_start_part.dart'
-    show Dio, FormData, MultipartFile, Options, PrettyDioLogger;
 
 main() {
 //  final g = GetIt.I;

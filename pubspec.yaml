@@ -13,12 +13,12 @@ dependencies:
 #  get_arch_quick_start: ^0.6.3
   get_arch_quick_start:
     path: D:/flutter_arch/get_arch_quick_start
-#  get_state: ^3.5.1
-  get_state:
-    path: D:\flutter_arch\get_state
-  gat_env_info: ^0.6.1
-#  gat_env_info:
-#    path: D:/flutter_arch/get_env_info
+  get_state: ">=3.6.0 <4.0.0"
+#  get_state:
+#    path: D:\flutter_arch\get_state
+#  get_env_info: ^0.6.2
+  get_env_info:
+    path: D:/flutter_arch/get_env_info
   flui: ^0.9.2
   image_picker: ^0.6.7+4
   groovin_material_icons: ^1.1.6
@@ -28,7 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^1.10.0
-  freezed: ^0.11.2
+  freezed: ^0.11.4
   injectable_generator: ^0.4.1
   mockito: ^4.1.1
 

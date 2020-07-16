@@ -248,7 +248,7 @@ packages:
       name: freezed
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.11.2"
+    version: "0.11.4"
   freezed_annotation:
     dependency: transitive
     description:
@@ -256,13 +256,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.11.0"
-  gat_env_info:
-    dependency: "direct main"
-    description:
-      name: gat_env_info
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.6.1"
   get_arch_core:
     dependency: transitive
     description:
@@ -277,6 +270,13 @@ packages:
       relative: false
     source: path
     version: "0.6.3"
+  get_env_info:
+    dependency: "direct main"
+    description:
+      path: "D:/flutter_arch/get_env_info"
+      relative: false
+    source: path
+    version: "0.6.2"
   get_it:
     dependency: transitive
     description:
@@ -287,10 +287,10 @@ packages:
   get_state:
     dependency: "direct main"
     description:
-      path: "D:\\flutter_arch\\get_state"
-      relative: false
-    source: path
-    version: "3.5.1"
+      name: get_state
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.6.0"
   glob:
     dependency: transitive
     description:

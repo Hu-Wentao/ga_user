@@ -50,7 +50,7 @@ class EditUserDataPage extends View<UserDateVm> {
                       padding: const EdgeInsets.fromLTRB(16, 48, 16, 36),
                       child: EditableAvatar(
                         updateAvatar: vm.updateAvatar,
-                        nickname: vm.m.nickname,
+                        nickname: vm.m?.nickname ?? '未登陆',
                         avatarBytes: vm.getAvatar,
                       ),
                     ),
@@ -318,6 +318,7 @@ class EditableAvatar extends StatelessWidget {
                         textStyle: TextStyle(fontSize: 17, color: Colors.white),
                       );
                     // 其他情况
+                    print('EditableAvatar.build #$data');
                     return FLAvatar(
                       color: Colors.blue,
                       width: 100,
