@@ -6,7 +6,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ga_user/application/get_avatar.dart';
 import 'package:ga_user/application/get_user.dart';
-import 'package:ga_user/application/upload_avatar.dart';
 import 'package:ga_user/application/user_logout.dart';
 import 'package:ga_user/domain/repositories/i_user_repo.dart';
 import 'package:ga_user/infrastructure/user_api_impl.dart';
@@ -67,7 +66,7 @@ class UserPackage extends IGetArchPackage {
   final String httpImplName;
   final String storageImplName;
 
-  final Map<String, bool> specProfile;
+  final Map<Type, bool> specProfile;
 
   UserPackage({
     EnvConfig pkgEnv,
@@ -77,15 +76,14 @@ class UserPackage extends IGetArchPackage {
     this.openIEnvInfo: true,
     this.httpImplName,
     this.storageImplName,
-    this.specProfile: const {'specProfile': false},
+    this.specProfile,
   })  : assert(specProfile != null),
         super(pkgEnv);
-  @override
-  Map<String, bool> get printBoolStateWithRegTypeName => {
-        'IUserAPI': openIUserAPI,
-        'IUserRepo': openIUserRepo,
-        'IEnvInfoSource': openIEnvInfo,
-        'IUserLocalSource': openIUserLocal,
+  Map<Type, bool> get interfaceImplRegisterStatus => {
+        IUserAPI: openIUserAPI,
+        IUserRepo: openIUserRepo,
+        IEnvInfoSource: openIEnvInfo,
+        IUserLocal: openIUserLocal,
       }..addAll(specProfile);
   @override
   Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => {
@@ -123,27 +121,40 @@ class UserPackage extends IGetArchPackage {
           ));
 
     // 用例注册 (均默认开启)
-    if (specProfile['UserUpdateInfo'] ?? true)
-      g.registerLazySingleton<UserUpdateInfo>(
-          () => UserUpdateInfo(g<IUserRepo>()));
-    if (specProfile['UserLogin'] ?? true)
-      g.registerLazySingleton<UserLogin>(() => UserLogin(g<IUserRepo>()));
-    if (specProfile['UserRegister'] ?? true)
-      g.registerLazySingleton<UserRegister>(() => UserRegister(g<IUserRepo>()));
-    if (specProfile['GetUser'] ?? true)
-      g.registerLazySingleton<GetUser>(() => GetUser(g<IUserRepo>()));
-    if (specProfile['UserDateVm'] ?? true)
-      g.registerLazySingleton<UserDateVm>(() => UserDateVm(g<UserUpdateInfo>(),
-          g<GetUser>(), g<UploadAvatar>(), g<GetAvatar>()));
-    if (specProfile['UploadAvatar'] ?? true)
-      g.registerLazySingleton<UploadAvatar>(() => UploadAvatar(g<IUserRepo>()));
-    if (specProfile['GetAvatar'] ?? true)
-      g.registerLazySingleton<GetAvatar>(
-          () => GetAvatar(g<IUserRepo>(), g<GetUser>()));
-    if (specProfile['UserLogout'] ?? true)
-      g.registerLazySingleton<UserLogout>(() => UserLogout(g<IUserRepo>()));
+    for (final entry in _specProfileRegisterFunc.entries)
+      if (specProfile == null || specProfile[entry.key] ?? true)
+        entry.value.call();
   }
 }
+
+Map<Type, Function()> get _specProfileRegisterFunc => {
+      UserLogin: () =>
+          g.registerLazySingleton<UserLogin>(() => UserLogin(g<IUserRepo>())),
+      UserRegister: () => g.registerLazySingleton<UserRegister>(
+          () => UserRegister(g<IUserRepo>())),
+      UserDateVm: () => g.registerLazySingleton<UserDateVm>(() => UserDateVm(
+            g<ObsUser>(),
+            g<UserUploadAvatarAndUpdate>(),
+            g<UserUpdateNickname>(),
+            g<UserUpdateSex>(),
+            g<ObsAvatar>(),
+          )),
+      UserLogout: () =>
+          g.registerLazySingleton<UserLogout>(() => UserLogout(g<IUserRepo>())),
+      GetAvatar: () => g.registerLazySingleton<GetAvatar>(
+          () => GetAvatar(g<IUserRepo>(), g<GetUser>())),
+      ObsUser: () =>
+          g.registerLazySingleton<ObsUser>(() => ObsUser(g<IUserRepo>())),
+      GetUser: () =>
+          g.registerLazySingleton<GetUser>(() => GetUser(g<IUserRepo>())),
+      UserUpdateSex: () => g.registerLazySingleton<UserUpdateSex>(
+          () => UserUpdateSex(g<IUserRepo>())),
+      UserUploadAvatarAndUpdate: () =>
+          g.registerLazySingleton<UserUploadAvatarAndUpdate>(
+              () => UserUploadAvatarAndUpdate(g<IUserRepo>())),
+      UserUpdateNickname: () => g.registerLazySingleton<UserUpdateNickname>(
+          () => UserUpdateNickname(g<IUserRepo>())),
+    };
 
 ///// 在这里可以使用injectable自动生成DI代码,
 ///// 直接将生成的代码复制到initPackageDI()中, 便于通过配置参数控制依赖注入
