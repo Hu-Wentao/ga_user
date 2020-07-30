@@ -196,7 +196,7 @@ packages:
       name: equatable
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.2"
   file:
     dependency: transitive
     description:
@@ -259,9 +259,9 @@ packages:
   get_arch_core:
     dependency: transitive
     description:
-      name: get_arch_core
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: "D:/flutter_arch/get_arch_core"
+      relative: false
+    source: path
     version: "0.6.1"
   get_arch_quick_start:
     dependency: "direct main"
@@ -287,9 +287,9 @@ packages:
   get_state:
     dependency: "direct main"
     description:
-      name: get_state
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: "D:\\flutter_arch\\get_state"
+      relative: false
+    source: path
     version: "3.6.0"
   glob:
     dependency: transitive

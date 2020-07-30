@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:ga_user/application/user_login.dart';
 import 'package:ga_user/application/user_register.dart';
-import 'package:ga_user/interface/auth_view_model.dart';
+import 'package:ga_user/interface/auth_vm.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:get_state/get_state.dart';
 

@@ -16,12 +16,15 @@ import 'package:image_picker/image_picker.dart';
 class UserCardView extends View<UserDateVm> {
   @override
   Widget build(BuildContext c, UserDateVm vm) {
-    if (vm.vmIsCreating) return CircularProgressIndicator();
+//    if (vm.isUserModelReady) return CircularProgressIndicator();
+//    if (vm.m.isLeft()) {
+//      return Text('${vm.m}');
+//    }
     return ListTile(
-      leading: Image.network(vm.m.avatar),
+      leading: _FutureAvatar(avatarBytes: vm.getAvatar(), nickname: vm.getNickName()),
       title: Row(
         children: <Widget>[
-          Text('${vm.m.nickname}'),
+          Text('${vm.getNickName()}'),
           IconButton(
               icon: Icon(Icons.edit),
               onPressed: () => Navigator.of(c)
@@ -35,44 +38,43 @@ class UserCardView extends View<UserDateVm> {
 class EditUserDataPage extends View<UserDateVm> {
   @override
   Future<void> onInitState(UserDateVm vm) async {
-    return vm.vmUpdate((await vm.getUser(null)).getOrElse(null));
+//    return vm.vmUpdate((await vm.obsUser(null)));
   }
+
   @override
   Widget build(BuildContext c, UserDateVm vm) => Scaffold(
         appBar: AppBar(title: Text('编辑资料')),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            children: (vm.vmIsCreating)
-                ? [CircularProgressIndicator()]
-                : <Widget>[
+            children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 48, 16, 36),
                       child: EditableAvatar(
                         updateAvatar: vm.updateAvatar,
-                        nickname: vm.m?.nickname ?? '未登陆',
-                        avatarBytes: vm.getAvatar,
+                        nickname: vm.getNickName(),
+                        avatarBytes: vm.getAvatar(),
                       ),
                     ),
                     StringEditableView(
                       leading: '昵称',
-                      showingValue: vm.m.nickname,
+                      showingValue: vm.getNickName(),
                       dialogTitle: '修改昵称',
                       updateValue: vm.updateNickName,
                     ),
                     EditableSex(
-                      showingSex: vm.m.sex,
+                      showingSex: vm.getSex(),
                       updateSex: vm.updateSex,
                     ),
                     StringEditableView(
                       leading: '邮箱',
-                      showingValue: vm.m.email,
+                      showingValue: vm.getEmail(),
                       dialogTitle: '修改邮箱',
                       updateValue: vm.updateEmail,
                     ),
                     StringEditableView(
                       leading: '手机',
-                      showingValue: vm.m.phone,
+                      showingValue: vm.getPhone(),
                       dialogTitle: '修改手机号',
                       updateValue: vm.updatePhone,
                     ),
@@ -284,7 +286,7 @@ class _StringEditableViewState extends State<StringEditableView> {
 ///
 /// 可编辑的头像
 class EditableAvatar extends StatelessWidget {
-  final Future<Either<Failure, Uint8List>> avatarBytes;
+  final Stream<Either<Failure, Uint8List>> avatarBytes;
   final String nickname;
   final Future<void> Function(String filePath) updateAvatar;
 
@@ -301,36 +303,10 @@ class EditableAvatar extends StatelessWidget {
             overflow: Overflow.visible,
             fit: StackFit.loose,
             children: [
-              FutureBuilder<Either<Failure, Uint8List>>(
-                  initialData: null,
-                  future: avatarBytes,
-                  builder: (c, s) {
-                    final data = s.data;
-                    // 初始数据 / 数据为空
-                    if (data == null) return CircularProgressIndicator();
-                    // 成功获取头像数据
-                    if (data.isRight())
-                      return FLAvatar(
-                        image: Image(
-                            image: MemoryImage(data.getOrElse(() => null))),
-                        width: 100,
-                        height: 100,
-                        textStyle: TextStyle(fontSize: 17, color: Colors.white),
-                      );
-                    // 如果是未登录, 应当可以收到 未登陆Error
-
-
-                    // 其他情况
-                    print('EditableAvatar.build #$data');
-                    return FLAvatar(
-                      color: Colors.blue,
-                      width: 100,
-                      height: 100,
-                      text:
-                          '${nickname.padLeft(2).substring(nickname.length - 2, nickname.length)}',
-                      textStyle: TextStyle(fontSize: 27, color: Colors.white),
-                    );
-                  }),
+              _FutureAvatar(
+                avatarBytes: avatarBytes,
+                nickname: nickname,
+              ),
               Positioned(
                 right: -15,
                 bottom: -15,
@@ -347,4 +323,67 @@ class EditableAvatar extends StatelessWidget {
               )
             ]),
       );
+}
+
+///
+/// 头像展示
+class _FutureAvatar extends StatelessWidget {
+  final Stream<Either<Failure, Uint8List>> avatarBytes;
+  final String nickname;
+
+  const _FutureAvatar(
+      {Key key, @required this.avatarBytes, @required this.nickname})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) =>
+      StreamBuilder<Either<Failure, Uint8List>>(
+          initialData: null,
+          stream: avatarBytes,
+          builder: (c, s) {
+            final data = s.data;
+            // 初始数据 / 数据为空
+            if (data == null) return CircularProgressIndicator();
+            return data.fold(
+              (l) {
+                if (l is NotLoginFailure)
+                  return FLAvatar(
+                    color: Colors.green,
+                    width: 100,
+                    height: 100,
+                    text: '请先登陆',
+                    textStyle: TextStyle(fontSize: 27, color: Colors.white),
+                  );
+
+                print('_FutureAvatar.build $l未知错误');
+                return FLAvatar(
+                  color: Colors.redAccent,
+                  width: 100,
+                  height: 100,
+                  text: '未知错误',
+                  textStyle: TextStyle(fontSize: 27, color: Colors.white),
+                );
+              },
+              (r) {
+                final bytes = data.getOrElse(() => null);
+                if (bytes == null) {
+                  return FLAvatar(
+                    color: Colors.blue,
+                    width: 100,
+                    height: 100,
+                    text:
+                        '${nickname.padLeft(2).substring(nickname.length - 2, nickname.length)}',
+                    textStyle: TextStyle(fontSize: 27, color: Colors.white),
+                  );
+                }
+                return FLAvatar(
+                  // 成功获取头像数据
+                  image: Image(image: MemoryImage(bytes)),
+                  width: 100,
+                  height: 100,
+                  textStyle: TextStyle(fontSize: 17, color: Colors.white),
+                );
+              },
+            );
+          });
 }

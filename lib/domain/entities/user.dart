@@ -79,7 +79,6 @@ class User extends IEntity {
     String avatar,
     Sex sex,
 //    EmailAddress email,
-//    String token,
 //    Password password,
 //    PhoneNumber phone,
   }) : this._(

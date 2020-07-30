@@ -6,52 +6,70 @@ import 'dart:typed_data';
 
 import 'package:ga_user/application/get_avatar.dart';
 import 'package:ga_user/application/get_user.dart';
-import 'package:ga_user/application/upload_avatar.dart';
 import 'package:ga_user/application/user_update_info.dart';
 import 'package:ga_user/domain/entities/user.dart';
-import 'package:ga_user/interface/dto/user_dto.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:get_state/get_state.dart';
 
 //@lazySingleton v
-class UserDateVm extends ViewModel<User> {
-  final GetUser getUser;
-  final UserUpdateInfo _updateInfo;
-  final UploadAvatar _uploadAvatar;
+class UserDateVm extends ViewModel {
+  final ObsUser _obsUser;
+  final UserUploadAvatarAndUpdate _uploadAvatarAndUpdate;
+  final UserUpdateNickname _updateNickName;
+  final UserUpdateSex _updateSex;
   final GetAvatar _getAvatar;
 
+  LiveModel<User> _userM;
+  LiveModel<Uint8List> _userAvatarM;
+
   UserDateVm(
-      this._updateInfo, this.getUser, this._uploadAvatar, this._getAvatar)
-      : super(() async => (await getUser(null)).getOrElse(() => null));
+    this._obsUser,
+    this._uploadAvatarAndUpdate,
+    this._updateNickName,
+    this._updateSex,
+    this._getAvatar,
+  ) {
+    _userM = _obsUser(null);
+  }
 
   /// 获取头像
-  Future<Either<Failure, Uint8List>> get getAvatar => _getAvatar(null);
+  Stream<Either<Failure, Uint8List>> getAvatar() => _userAvatarM.obsData;
+
+  /// 获取昵称
+  String getNickName() => _userM.snapFold<String>(
+      onNull: () => 'loading...',
+      onFailure: (f) {
+        if (f is NotLoginFailure) return '尚未登陆';
+        return 'error';
+      },
+      onData: (r) => r.nickname);
+
+  Sex getSex() =>
+      _userM.snapFold<Sex>(onFailure: (f) => null, onData: (r) => r?.sex);
+
+  String getEmail() => _userM.snapFold<String>(
+      onFailure: (f) => 'error!', onData: (r) => r?.email);
+
+  String getPhone() => _userM.snapFold<String>(
+      onFailure: (f) => 'error!', onData: (r) => r?.phone);
 
   /// 更新头像
-  Future updateAvatar(String nAvatarFilePath) async =>
-      await _uploadAvatar(nAvatarFilePath);
+  updateAvatar(String nAvatarFilePath) async =>
+      await _uploadAvatarAndUpdate(nAvatarFilePath);
 
   /// 更新昵称
-  updateNickName(String nNickname) async {
-    User n = UserDto.fromDomain(m).copyWith(username: nNickname).toDomain();
-    _updateInfo(n);
-  }
+  updateNickName(String nNickname) async => await _updateNickName(nNickname);
 
   /// 更新
-  updateSex(Sex nSex) {
-    User n = UserDto.fromDomain(m).copyWith(sex: nSex.index).toDomain();
-    _updateInfo(n);
-  }
+  updateSex(Sex nSex) async => await _updateSex(nSex);
 
   /// 更新
   updateEmail(String nEmail) {
-    User n = UserDto.fromDomain(m).copyWith(email: nEmail).toDomain();
-    _updateInfo(n);
+    // todo
   }
 
   /// 更新
   updatePhone(String nPhone) {
-    User n = UserDto.fromDomain(m).copyWith(email: nPhone).toDomain();
-    _updateInfo(n);
+    // todo
   }
 }

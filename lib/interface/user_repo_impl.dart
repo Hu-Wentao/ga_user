@@ -2,6 +2,7 @@
 // Email : hu.wentao@outlook.com
 // Date  : 2020/2/28
 // Time  : 13:15
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -23,15 +24,37 @@ import 'i_user_local.dart';
 //@LazySingleton(as: IUserRepo) // 手动注册
 class UserRepoImpl extends IUserRepo {
   // 网络源
-  final IUserAPI api;
+  final IUserAPI _api;
 
   // 本地源
-  final IUserLocal local;
+  final IUserLocal _local;
 
   // 环境数据
-  final IEnvInfoSource envSource;
+  final IEnvInfoSource _envSource;
 
-  UserRepoImpl(this.local, this.api, this.envSource);
+  // 当前用户 fixme LiveModel更适合在 数据源(_local)中定义
+  ControlledLiveModel<User> _curLiveUser;
+
+  UserRepoImpl(this._local, this._api, this._envSource) {
+    _curLiveUser = ControlledLiveModel<User>(getData: () => query(null));
+  }
+
+  /// 缓存到本地, [user] 与 [dto]只需要填写一个
+  _cacheToLocal({User user, UserDto userDto}) {
+    // 如果直接传入DTO, 则不再检测User
+    if (userDto != null) {
+      _curLiveUser.postRight(userDto.toDomain());
+    } else {
+      // 此时检测User
+      if (user == null) {
+        _curLiveUser.postLeft(NotLoginFailure());
+      } else {
+        userDto = UserDto.fromDomain(user);
+        _curLiveUser.postRight(user);
+      }
+    }
+    _local.setCurUserDto(userDto);
+  }
 
   @override
   Future<Either<Failure, Unit>> loginWithEmail(User param) async =>
@@ -45,22 +68,22 @@ class UserRepoImpl extends IUserRepo {
   Future<Either<Failure, Unit>> _processLoginOrRegister(
       bool isLogin, User p) async {
     try {
-      final env = await envSource.getEnvInfo();
+      final env = await _envSource.getEnvInfo();
       final authDto =
           AuthDto.fromDomain(p.email, p.password, EnvInfoDto.fromDomain(env));
       // 从网络获取数据
       final jsData = await (isLogin
-          ? await api.login(authDto)
-          : await api.register(authDto));
+          ? await _api.login(authDto)
+          : await _api.register(authDto));
 
       final data = jsData['data'];
       if (data == null) throw jsData;
       // 缓存到本地
-      local.setCurUserDto(UserDto.fromJson(data));
+      _cacheToLocal(userDto: UserDto.fromJson(data));
       return Right(null);
     } catch (e, s) {
       return Left(UnknownFailure(
-          'UserRepoImpl._processLoginOrRegister\napi[${api.runtimeType}]\ne[$e]',
+          'UserRepoImpl._processLoginOrRegister\napi[${_api.runtimeType}]\ne[$e]',
           s));
     }
   }
@@ -70,13 +93,13 @@ class UserRepoImpl extends IUserRepo {
     try {
       if (uId != null) {
         // 通过id查询用户
-        final jsData = await api.queryById(uId);
+        final jsData = await _api.queryById(uId);
         final data = jsData['data'];
         if (data == null) return left(UserNotFoundFailure());
         final u = UserDto.fromJson(data).toDomain();
         return right(u);
       } else {
-        final u = local.getCurUserDto().toDomain();
+        final u = _local.getCurUserDto().toDomain();
         if (u == null) return left(NotLoginFailure());
         return right(u);
       }
@@ -85,15 +108,17 @@ class UserRepoImpl extends IUserRepo {
     }
   }
 
+  LiveModel<User> liveUser() => _curLiveUser;
+
   @override
   Future<Either<Failure, Unit>> update(User user) async {
     try {
       // 网络请求
       final dto = UserDto.fromDomain(user);
-      await api.updateInfo(dto);
-      // todo 需要接收api的返回值
+      final js = await _api.updateInfo(dto);
+      final nDto = UserDto.fromJson(js);
       // 刷新本地缓存
-      await local.setCurUserDto(dto);
+      _cacheToLocal(userDto: nDto);
       return right(null);
     } on Failure catch (f) {
       return left(f);
@@ -103,19 +128,19 @@ class UserRepoImpl extends IUserRepo {
   }
 
   @override
-  Future<Either<Failure, Unit>> uploadAvatar(String path) async {
+  Future<Either<Failure, String>> uploadAvatar(String path) async {
     try {
       // 网络上传 注意 这里的path, 是包含了文件名称的文件路径
-      final rspData = await api.uploadAvatar(path);
+      final rspData = await _api.uploadAvatar(path);
       print('UserRepoImpl.uploadAvatar ##debug :$rspData');
       final imgId = rspData['data']['id'];
       // 本地缓存
       final img = await File(path).readAsBytes();
-      local.setAvatarBytes(imgId, img);
+      _local.setAvatarBytes(imgId, img);
       // - 刷新 本地User的数据
-      final nUserDto = local.getCurUserDto().copyWith(id: imgId);
-      local.setCurUserDto(nUserDto);
-      return right(null);
+      final nUserDto = _local.getCurUserDto().copyWith(id: imgId);
+      _cacheToLocal(userDto: nUserDto);
+      return right(imgId);
     } on Failure catch (f) {
       return left(f);
     } catch (e, s) {
@@ -127,7 +152,8 @@ class UserRepoImpl extends IUserRepo {
   Future<Either<Failure, Uint8List>> getAvatar(String imgId) async {
     try {
       // 本地读取 todo 为本地读写建立一个时间失效策略
-      final imgBytes = local.getAvatarBytes(imgId) ?? await api.queryImg(imgId);
+      final imgBytes =
+          _local.getAvatarBytes(imgId) ?? await _api.queryImg(imgId);
       return right(imgBytes);
     } on Failure catch (f) {
       return left(f);
@@ -139,8 +165,8 @@ class UserRepoImpl extends IUserRepo {
   @override
   Future<Either<Failure, Unit>> logout() async {
     try {
-      // 移除缓存
-      local.setCurUserDto(null);
+      // 缓存置空
+      _cacheToLocal();
       return right(null);
     } on Failure catch (f) {
       return left(f);

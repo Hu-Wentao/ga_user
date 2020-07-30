@@ -137,7 +137,7 @@ Map<Type, Function()> get _specProfileRegisterFunc => {
             g<UserUploadAvatarAndUpdate>(),
             g<UserUpdateNickname>(),
             g<UserUpdateSex>(),
-            g<ObsAvatar>(),
+            g<GetAvatar>(),
           )),
       UserLogout: () =>
           g.registerLazySingleton<UserLogout>(() => UserLogout(g<IUserRepo>())),

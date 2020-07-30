@@ -27,7 +27,7 @@ class GetAvatar extends UseCase<Uint8List, String> {
       if (user.isLeft()) return user.map<Uint8List>(null);
       final userR = user.getOrElse(null);
       imgId = userR.avatar;
-      if(imgId == null){
+      if (imgId == null) {
         return left(null); // todo 这里返回的是null,可能会出错
       }
     }

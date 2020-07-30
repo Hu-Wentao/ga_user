@@ -9,7 +9,7 @@ export 'application/user_update_info.dart';
 
 export 'interface/i_user_api.dart';
 export 'interface/i_user_local.dart';
-export 'interface/auth_view_model.dart';
+export 'interface/auth_vm.dart';
 
 export 'infrastructure/ui/auth_page.dart';
 
