@@ -38,7 +38,7 @@ abstract class IUserRepo {
   Future<Either<Failure, Uint8List>> getAvatar(String imgId);
 
   /// 不同于[liveUsr]可以请求并缓存最新的数据
-  LiveModel<User> liveUser();
+//  Stream<Either<Failure, User>> liveUser();
 
 //  // QQ登陆
 //  Future<Either<Failure, Unit>> queryWithQQ();

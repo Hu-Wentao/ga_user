@@ -32,27 +32,27 @@ class UserRepoImpl extends IUserRepo {
   // 环境数据
   final IEnvInfoSource _envSource;
 
-  // 当前用户 fixme LiveModel更适合在 数据源(_local)中定义
-  ControlledLiveModel<User> _curLiveUser;
+//  // 当前用户 fixme LiveModel更适合在 数据源(_local)中定义
+//  Stream<Either<Failure, User>> _curLiveUser;
 
   UserRepoImpl(this._local, this._api, this._envSource) {
-    _curLiveUser = ControlledLiveModel<User>(getData: () => query(null));
+//    _curLiveUser = ControlledLiveModel<User>(getData: () => query(null));
   }
 
   /// 缓存到本地, [user] 与 [dto]只需要填写一个
   _cacheToLocal({User user, UserDto userDto}) {
-    // 如果直接传入DTO, 则不再检测User
-    if (userDto != null) {
-      _curLiveUser.postRight(userDto.toDomain());
-    } else {
-      // 此时检测User
-      if (user == null) {
-        _curLiveUser.postLeft(NotLoginFailure());
-      } else {
-        userDto = UserDto.fromDomain(user);
-        _curLiveUser.postRight(user);
-      }
-    }
+//    // 如果直接传入DTO, 则不再检测User
+//    if (userDto != null) {
+//      _curLiveUser.postRight(userDto.toDomain());
+//    } else {
+//      // 此时检测User
+//      if (user == null) {
+//        _curLiveUser.postLeft(NotLoginFailure());
+//      } else {
+//        userDto = UserDto.fromDomain(user);
+//        _curLiveUser.postRight(user);
+//      }
+//    }
     _local.setCurUserDto(userDto);
   }
 
@@ -99,7 +99,7 @@ class UserRepoImpl extends IUserRepo {
         final u = UserDto.fromJson(data).toDomain();
         return right(u);
       } else {
-        final u = _local.getCurUserDto().toDomain();
+        final u = _local.getCurUserDto()?.toDomain();
         if (u == null) return left(NotLoginFailure());
         return right(u);
       }
@@ -108,7 +108,7 @@ class UserRepoImpl extends IUserRepo {
     }
   }
 
-  LiveModel<User> liveUser() => _curLiveUser;
+//  Stream<Either<Failure, User>> liveUser() => _curLiveUser;
 
   @override
   Future<Either<Failure, Unit>> update(User user) async {

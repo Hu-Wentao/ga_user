@@ -18,11 +18,11 @@ class GetUser extends UseCase<User, String> {
   Future<Either<Failure, User>> call(String uId) async => await repo.query(uId);
 }
 
-/// 参数为null表示获取当前已登陆用户
-/// 因为只支持观察当前用户,因此输入参数为 null(即[Unit]类型)
-class ObsUser extends ObservableUseCase<User, Unit> {
-  final IUserRepo _repo;
-  ObsUser(this._repo);
-  @override
-  LiveModel<User> call(Unit _) => _repo.liveUser();
-}
+///// 参数为null表示获取当前已登陆用户
+///// 因为只支持观察当前用户,因此输入参数为 null(即[Unit]类型)
+//class ObsUser extends ObservableUseCase<User, Unit> {
+//  final IUserRepo _repo;
+//  ObsUser(this._repo);
+//  @override
+//  Stream<Either<Failure, User>> call(Unit _) => _repo.liveUser();
+//}

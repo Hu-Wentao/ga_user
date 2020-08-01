@@ -21,7 +21,8 @@ class UserCardView extends View<UserDateVm> {
 //      return Text('${vm.m}');
 //    }
     return ListTile(
-      leading: _FutureAvatar(avatarBytes: vm.getAvatar(), nickname: vm.getNickName()),
+      leading: _FutureAvatar(
+          avatarBytes: vm.getAvatar(), nickname: vm.getNickName()),
       title: Row(
         children: <Widget>[
           Text('${vm.getNickName()}'),
@@ -48,37 +49,37 @@ class EditUserDataPage extends View<UserDateVm> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 48, 16, 36),
-                      child: EditableAvatar(
-                        updateAvatar: vm.updateAvatar,
-                        nickname: vm.getNickName(),
-                        avatarBytes: vm.getAvatar(),
-                      ),
-                    ),
-                    StringEditableView(
-                      leading: '昵称',
-                      showingValue: vm.getNickName(),
-                      dialogTitle: '修改昵称',
-                      updateValue: vm.updateNickName,
-                    ),
-                    EditableSex(
-                      showingSex: vm.getSex(),
-                      updateSex: vm.updateSex,
-                    ),
-                    StringEditableView(
-                      leading: '邮箱',
-                      showingValue: vm.getEmail(),
-                      dialogTitle: '修改邮箱',
-                      updateValue: vm.updateEmail,
-                    ),
-                    StringEditableView(
-                      leading: '手机',
-                      showingValue: vm.getPhone(),
-                      dialogTitle: '修改手机号',
-                      updateValue: vm.updatePhone,
-                    ),
-                  ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 48, 16, 36),
+                child: EditableAvatar(
+                  updateAvatar: vm.updateAvatar,
+                  nickname: vm.getNickName(),
+                  avatarBytes: vm.getAvatar(),
+                ),
+              ),
+              StringEditableView(
+                leading: '昵称',
+                showingValue: vm.getNickName(),
+                dialogTitle: '修改昵称',
+                updateValue: vm.updateNickName,
+              ),
+              EditableSex(
+                showingSex: vm.getSex(),
+                updateSex: vm.updateSex,
+              ),
+              StringEditableView(
+                leading: '邮箱',
+                showingValue: vm.getEmail(),
+                dialogTitle: '修改邮箱',
+                updateValue: vm.updateEmail,
+              ),
+              StringEditableView(
+                leading: '手机',
+                showingValue: vm.getPhone(),
+                dialogTitle: '修改手机号',
+                updateValue: vm.updatePhone,
+              ),
+            ],
           ),
         ),
       );
@@ -286,7 +287,7 @@ class _StringEditableViewState extends State<StringEditableView> {
 ///
 /// 可编辑的头像
 class EditableAvatar extends StatelessWidget {
-  final Stream<Either<Failure, Uint8List>> avatarBytes;
+  final Future<Either<Failure, Uint8List>> avatarBytes;
   final String nickname;
   final Future<void> Function(String filePath) updateAvatar;
 
@@ -328,7 +329,7 @@ class EditableAvatar extends StatelessWidget {
 ///
 /// 头像展示
 class _FutureAvatar extends StatelessWidget {
-  final Stream<Either<Failure, Uint8List>> avatarBytes;
+  final Future<Either<Failure, Uint8List>> avatarBytes;
   final String nickname;
 
   const _FutureAvatar(
@@ -337,9 +338,9 @@ class _FutureAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      StreamBuilder<Either<Failure, Uint8List>>(
+      FutureBuilder<Either<Failure, Uint8List>>(
           initialData: null,
-          stream: avatarBytes,
+          future: avatarBytes,
           builder: (c, s) {
             final data = s.data;
             // 初始数据 / 数据为空

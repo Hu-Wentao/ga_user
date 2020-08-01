@@ -12,49 +12,51 @@ import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:get_state/get_state.dart';
 
 //@lazySingleton v
-class UserDateVm extends ViewModel {
-  final ObsUser _obsUser;
+class UserDateVm extends ViewModel<Either<Failure, User>> {
+  final GetUser _getUser;
   final UserUploadAvatarAndUpdate _uploadAvatarAndUpdate;
   final UserUpdateNickname _updateNickName;
   final UserUpdateSex _updateSex;
   final GetAvatar _getAvatar;
 
-  LiveModel<User> _userM;
-  LiveModel<Uint8List> _userAvatarM;
+//  Stream<Either<Failure, User>> _userM;
+//  Stream<Either<Failure, Uint8List>> _userAvatarM;
 
   UserDateVm(
-    this._obsUser,
+    this._getUser,
     this._uploadAvatarAndUpdate,
     this._updateNickName,
     this._updateSex,
     this._getAvatar,
-  ) {
-    _userM = _obsUser(null);
+  ) : super(create: () async => await _getUser(null)) {
+//    _userM = _obsUser(null);
+  }
+
+  /// 从数据源刷新Model
+  Future<void> refreshModel() async {
+    final r = await _getUser(null);
+    vmUpdate(r);
   }
 
   /// 获取头像
-  Stream<Either<Failure, Uint8List>> getAvatar() => _userAvatarM.obsData;
+  Future<Either<Failure, Uint8List>> getAvatar() => _getAvatar(null);
 
   /// 获取昵称
-  String getNickName() => _userM.snapFold<String>(
-      onNull: () => 'loading...',
-      onFailure: (f) {
+  String getNickName() =>
+      m?.fold<String>((f) {
         if (f is NotLoginFailure) return '尚未登陆';
         return 'error';
-      },
-      onData: (r) => r.nickname);
+      }, (r) => r.nickname) ??
+      'loading...';
 
-  Sex getSex() =>
-      _userM.snapFold<Sex>(onFailure: (f) => null, onData: (r) => r?.sex);
+  Sex getSex() => m?.fold<Sex>((f) => null, (r) => r?.sex);
 
-  String getEmail() => _userM.snapFold<String>(
-      onFailure: (f) => 'error!', onData: (r) => r?.email);
+  String getEmail() => m?.fold<String>((f) => 'error!', (r) => r?.email);
 
-  String getPhone() => _userM.snapFold<String>(
-      onFailure: (f) => 'error!', onData: (r) => r?.phone);
+  String getPhone() => m?.fold<String>((f) => 'error!', (r) => r?.phone);
 
   /// 更新头像
-  updateAvatar(String nAvatarFilePath) async =>
+  Future<void> updateAvatar(String nAvatarFilePath) async =>
       await _uploadAvatarAndUpdate(nAvatarFilePath);
 
   /// 更新昵称
