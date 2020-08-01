@@ -63,9 +63,15 @@ class EditUserDataPage extends View<UserDateVm> {
                 dialogTitle: '修改昵称',
                 updateValue: vm.updateNickName,
               ),
-              EditableSex(
-                showingSex: vm.getSex(),
-                updateSex: vm.updateSex,
+              EnumEditableView<Sex>(
+                leading: '性别',
+                dialogTitle: '修改性别',
+                showingValue: vm.getSex(),
+                updateValue: vm.updateSex,
+                enumTextMap: <Sex, String>{
+                  Sex.male: '男',
+                  Sex.female: '女',
+                },
               ),
               StringEditableView(
                 leading: '邮箱',
@@ -86,68 +92,87 @@ class EditUserDataPage extends View<UserDateVm> {
 }
 
 ///
-/// 可编辑的性别
-class EditableSex extends StatefulWidget {
-  final Sex showingSex;
-  final Function(Sex nSex) updateSex;
+/// 可编辑的枚举类型
+///
+/// [enumTextMap] 该映射Key的顺序务必于Enum的顺序保持一致,
+///   即enum.values[0]务必是Map的第一个元素, 以此类推
+class EnumEditableView<T> extends StatefulWidget {
+  final String leading;
+  final String dialogTitle;
+  final T showingValue;
+  final Function(T nValue) updateValue;
+  final Map<T, String> enumTextMap;
 
-  const EditableSex({
+  const EnumEditableView({
     Key key,
-    @required this.showingSex,
-    @required this.updateSex,
+    @required this.leading,
+    @required this.dialogTitle,
+    @required this.showingValue,
+    @required this.updateValue,
+    @required this.enumTextMap,
   }) : super(key: key);
 
   @override
-  _EditableSexState createState() => _EditableSexState();
+  _EnumEditableViewState createState() => _EnumEditableViewState();
 }
 
-class _EditableSexState extends State<EditableSex> {
-  ValueNotifier<Sex> sexNotifier;
+class _EnumEditableViewState<T> extends State<EnumEditableView<T>> {
+  ValueNotifier<T> showingEnumNotifier;
   @override
   void initState() {
-    sexNotifier = ValueNotifier<Sex>(widget.showingSex);
+    showingEnumNotifier = ValueNotifier<T>(widget.showingValue);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: Text('性别', style: Theme.of(context).textTheme.subtitle1),
-        title: Text(_showSex(widget.showingSex)),
+        leading:
+            Text(widget.leading, style: Theme.of(context).textTheme.subtitle1),
+        title: Text(widget.showingValue == null
+            ? '- -'
+            : widget.enumTextMap[widget.showingValue]),
         trailing: IconButton(
             icon: Icon(Icons.chevron_right),
-            onPressed: () => showDialog<bool>(
-                context: context,
-                builder: (c) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      title: Text('更改性别'),
-                      content: _RadioTileList(sexNotifier: sexNotifier),
-                      contentPadding:
-                          const EdgeInsets.only(left: 20, right: 20, top: 18),
-                      actions: <Widget>[
-                        FlatButton(
-                          highlightColor: const Color(0x55FF8A80),
-                          splashColor: const Color(0x99FF8A80),
-                          onPressed: () => _onCancelEdit(c),
-                          child: const Text('取消',
-                              style: TextStyle(color: Colors.redAccent)),
-                        ),
-                        FlatButton(
-                          onPressed: () async {
-                            if (sexNotifier.value != widget.showingSex) {
-                              await widget.updateSex(sexNotifier.value);
-                              _onConfirmEdit(c);
-                            } else
-                              _onCancelEdit(c);
-                          },
-                          child: const Text('保存'),
-                        ),
-                      ],
-                    )).then((dialogReturn) => Scaffold.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(dialogReturn ? '正在保存...' : '取消编辑'),
-                      duration: const Duration(seconds: 2)),
-                ))),
+            onPressed: () => widget.showingValue == null
+                ? null
+                : showDialog<bool>(
+                    context: context,
+                    builder: (c) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          title: Text(widget.dialogTitle),
+                          content: _RadioTileList<T>(
+                              showingEnumNotifier: showingEnumNotifier,
+                              enumTextMap: widget.enumTextMap),
+                          contentPadding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 18),
+                          actions: <Widget>[
+                            FlatButton(
+                              highlightColor: const Color(0x55FF8A80),
+                              splashColor: const Color(0x99FF8A80),
+                              onPressed: () => _onCancelEdit(c),
+                              child: const Text('取消',
+                                  style: TextStyle(color: Colors.redAccent)),
+                            ),
+                            FlatButton(
+                              onPressed: () async {
+                                if (showingEnumNotifier.value !=
+                                    widget.showingValue) {
+                                  await widget
+                                      .updateValue(showingEnumNotifier.value);
+                                  _onConfirmEdit(c);
+                                } else
+                                  _onCancelEdit(c);
+                              },
+                              child: const Text('保存'),
+                            ),
+                          ],
+                        )).then(
+                    (dialogReturn) => Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(dialogReturn ? '正在保存...' : '取消编辑'),
+                              duration: const Duration(seconds: 2)),
+                        ))),
       );
 
   _onCancelEdit(BuildContext _) => Navigator.pop(_, false);
@@ -155,41 +180,36 @@ class _EditableSexState extends State<EditableSex> {
   _onConfirmEdit(BuildContext _) => Navigator.pop(_, true);
 }
 
-class _RadioTileList extends StatefulWidget {
-  final ValueNotifier<Sex> sexNotifier;
+class _RadioTileList<T> extends StatefulWidget {
+  final ValueNotifier<T> showingEnumNotifier;
+  final Map<T, String> enumTextMap;
 
-  const _RadioTileList({Key key, this.sexNotifier}) : super(key: key);
+  const _RadioTileList({
+    Key key,
+    @required this.showingEnumNotifier,
+    @required this.enumTextMap,
+  }) : super(key: key);
 
   @override
   __RadioTileListState createState() => __RadioTileListState();
 }
 
-class __RadioTileListState extends State<_RadioTileList> {
+class __RadioTileListState<T> extends State<_RadioTileList<T>> {
   @override
   Widget build(BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: List.generate(
             Sex.values.length,
-            (i) => RadioListTile<Sex>(
-                  title: Text(_showSex(Sex.values[i])),
-                  value: Sex.values[i],
-                  groupValue: widget.sexNotifier.value,
+            (i) => RadioListTile<T>(
+                  title: Text(widget.enumTextMap.values.elementAt(i)),
+                  value: widget.enumTextMap.keys.elementAt(i),
+                  groupValue: widget.showingEnumNotifier.value,
                   onChanged: _refresh,
                 )),
       );
 
-  void _refresh(Sex value) => setState(() => widget.sexNotifier.value = value);
-}
-
-String _showSex(Sex s) {
-  switch (s) {
-    case Sex.male:
-      return '男';
-    case Sex.female:
-      return '女';
-    default:
-      return '未知';
-  }
+  void _refresh(T value) =>
+      setState(() => widget.showingEnumNotifier.value = value);
 }
 
 ///
@@ -286,7 +306,7 @@ class _StringEditableViewState extends State<StringEditableView> {
 
 ///
 /// 可编辑的头像
-class EditableAvatar extends StatelessWidget {
+class EditableAvatar extends StatefulWidget {
   final Future<Either<Failure, Uint8List>> avatarBytes;
   final String nickname;
   final Future<void> Function(String filePath) updateAvatar;
@@ -297,6 +317,26 @@ class EditableAvatar extends StatelessWidget {
     @required this.nickname,
     @required this.updateAvatar,
   }) : super(key: key);
+
+  @override
+  _EditableAvatarState createState() => _EditableAvatarState();
+}
+
+class _EditableAvatarState extends State<EditableAvatar> {
+  ValueNotifier<bool> _showAvatarEditIconNotifier;
+  @override
+  void initState() {
+    _showAvatarEditIconNotifier = ValueNotifier(false);
+    _showAvatarEditIconNotifier.addListener(() => setState(() {}));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _showAvatarEditIconNotifier.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) => Center(
         child: Stack(
@@ -305,23 +345,25 @@ class EditableAvatar extends StatelessWidget {
             fit: StackFit.loose,
             children: [
               _FutureAvatar(
-                avatarBytes: avatarBytes,
-                nickname: nickname,
+                avatarBytes: widget.avatarBytes,
+                nickname: widget.nickname,
+                successNotifier: _showAvatarEditIconNotifier,
               ),
-              Positioned(
-                right: -15,
-                bottom: -15,
-                child: IconButton(
-                  icon: Icon(Icons.photo_camera),
-                  onPressed: () async {
-                    // 可以将Picker放到挂载的Module中, 但没有必要
-                    final path = (await ImagePicker()
-                            .getImage(source: ImageSource.gallery))
-                        .path;
-                    updateAvatar(path);
-                  },
-                ),
-              )
+              if (_showAvatarEditIconNotifier.value)
+                Positioned(
+                  right: -15,
+                  bottom: -15,
+                  child: IconButton(
+                    icon: Icon(Icons.photo_camera),
+                    onPressed: () async {
+                      // 可以将Picker放到挂载的Module中, 但没有必要
+                      final path = (await ImagePicker()
+                              .getImage(source: ImageSource.gallery))
+                          .path;
+                      widget.updateAvatar(path);
+                    },
+                  ),
+                )
             ]),
       );
 }
@@ -331,9 +373,12 @@ class EditableAvatar extends StatelessWidget {
 class _FutureAvatar extends StatelessWidget {
   final Future<Either<Failure, Uint8List>> avatarBytes;
   final String nickname;
-
+  final ValueNotifier<bool> successNotifier;
   const _FutureAvatar(
-      {Key key, @required this.avatarBytes, @required this.nickname})
+      {Key key,
+      @required this.avatarBytes,
+      @required this.nickname,
+      this.successNotifier})
       : super(key: key);
 
   @override
@@ -349,23 +394,29 @@ class _FutureAvatar extends StatelessWidget {
               (l) {
                 if (l is NotLoginFailure)
                   return FLAvatar(
-                    color: Colors.green,
+                    color: Colors.grey,
                     width: 100,
                     height: 100,
-                    text: '请先登陆',
+                    text: '未登陆',
                     textStyle: TextStyle(fontSize: 27, color: Colors.white),
+                    onTap: () {
+                      // TODO 点击头像进入登录页
+                    },
                   );
 
-                print('_FutureAvatar.build $l未知错误');
                 return FLAvatar(
                   color: Colors.redAccent,
                   width: 100,
                   height: 100,
                   text: '未知错误',
                   textStyle: TextStyle(fontSize: 27, color: Colors.white),
+                  onTap: () {
+                    // todo 点击头像展示错误
+                  },
                 );
               },
               (r) {
+                successNotifier.value = true;
                 final bytes = data.getOrElse(() => null);
                 if (bytes == null) {
                   return FLAvatar(

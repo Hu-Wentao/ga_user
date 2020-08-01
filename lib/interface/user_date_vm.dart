@@ -19,18 +19,13 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
   final UserUpdateSex _updateSex;
   final GetAvatar _getAvatar;
 
-//  Stream<Either<Failure, User>> _userM;
-//  Stream<Either<Failure, Uint8List>> _userAvatarM;
-
   UserDateVm(
     this._getUser,
     this._uploadAvatarAndUpdate,
     this._updateNickName,
     this._updateSex,
     this._getAvatar,
-  ) : super(create: () async => await _getUser(null)) {
-//    _userM = _obsUser(null);
-  }
+  ) : super(create: () async => await _getUser(null));
 
   /// 从数据源刷新Model
   Future<void> refreshModel() async {
@@ -44,16 +39,22 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
   /// 获取昵称
   String getNickName() =>
       m?.fold<String>((f) {
-        if (f is NotLoginFailure) return '尚未登陆';
+        if (f is NotLoginFailure) return '您尚未登陆';
         return 'error';
       }, (r) => r.nickname) ??
       'loading...';
 
   Sex getSex() => m?.fold<Sex>((f) => null, (r) => r?.sex);
 
-  String getEmail() => m?.fold<String>((f) => 'error!', (r) => r?.email);
+  String getEmail() =>
+      m?.fold<String>(
+          (f) => f is NotLoginFailure ? '您尚未登陆' : 'error!', (r) => r?.email) ??
+      'loading...';
 
-  String getPhone() => m?.fold<String>((f) => 'error!', (r) => r?.phone);
+  String getPhone() =>
+      m?.fold<String>(
+          (f) => f is NotLoginFailure ? '您尚未登陆' : 'error!', (r) => r?.phone) ??
+      'loading...';
 
   /// 更新头像
   Future<void> updateAvatar(String nAvatarFilePath) async =>
