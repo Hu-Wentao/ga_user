@@ -83,7 +83,7 @@ class UserPackage extends IGetArchPackage {
         IUserRepo: openIUserRepo,
         IEnvInfoSource: openIEnvInfo,
         IUserLocal: openIUserLocal,
-      }..addAll(specProfile ?? []);
+      }..addAll(specProfile ?? Map<Type, bool>());
   @override
   Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => {
         'httpImplName': '$httpImplName',
