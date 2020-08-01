@@ -77,14 +77,13 @@ class UserPackage extends IGetArchPackage {
     this.httpImplName,
     this.storageImplName,
     this.specProfile,
-  })  : assert(specProfile != null),
-        super(pkgEnv);
+  }) : super(pkgEnv);
   Map<Type, bool> get interfaceImplRegisterStatus => {
         IUserAPI: openIUserAPI,
         IUserRepo: openIUserRepo,
         IEnvInfoSource: openIEnvInfo,
         IUserLocal: openIUserLocal,
-      }..addAll(specProfile);
+      }..addAll(specProfile ?? []);
   @override
   Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => {
         'httpImplName': '$httpImplName',
@@ -133,7 +132,7 @@ Map<Type, Function()> get _specProfileRegisterFunc => {
       UserRegister: () => g.registerLazySingleton<UserRegister>(
           () => UserRegister(g<IUserRepo>())),
       UserDateVm: () => g.registerLazySingleton<UserDateVm>(() => UserDateVm(
-            g<ObsUser>(),
+            g<GetUser>(),
             g<UserUploadAvatarAndUpdate>(),
             g<UserUpdateNickname>(),
             g<UserUpdateSex>(),
@@ -143,8 +142,6 @@ Map<Type, Function()> get _specProfileRegisterFunc => {
           g.registerLazySingleton<UserLogout>(() => UserLogout(g<IUserRepo>())),
       GetAvatar: () => g.registerLazySingleton<GetAvatar>(
           () => GetAvatar(g<IUserRepo>(), g<GetUser>())),
-      ObsUser: () =>
-          g.registerLazySingleton<ObsUser>(() => ObsUser(g<IUserRepo>())),
       GetUser: () =>
           g.registerLazySingleton<GetUser>(() => GetUser(g<IUserRepo>())),
       UserUpdateSex: () => g.registerLazySingleton<UserUpdateSex>(
