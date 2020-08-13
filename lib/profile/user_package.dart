@@ -86,8 +86,9 @@ class UserPackage extends IGetArchPackage {
       }..addAll(specProfile ?? Map<Type, bool>());
   @override
   Map<String, String> printOtherStateWithEnvConfig(EnvConfig config) => {
-        'httpImplName': '$httpImplName',
-        'storageImplName': storageImplName,
+        'httpImplName': httpImplName == null ? 'null' : '[$httpImplName]',
+        'storageImplName':
+            storageImplName == null ? 'null' : '[$storageImplName]',
       };
   @override
   Future<void> init(EnvConfig env, bool printConfig) async {
