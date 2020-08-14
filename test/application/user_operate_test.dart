@@ -6,7 +6,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:ga_user/application/user_login.dart';
 import 'package:ga_user/application/user_register.dart';
 import 'package:ga_user/domain/entities/user.dart';
@@ -14,10 +13,9 @@ import 'package:ga_user/domain/repositories/i_user_repo.dart';
 import 'package:ga_user/ga_user.dart';
 import 'package:ga_user/interface/i_user_local.dart';
 import 'package:get_arch_core/domain/env_config.dart';
-import 'package:get_arch_core/get_arch_core.dart';
 import 'package:get_arch_quick_start/interface/i_network.dart';
 import 'package:get_arch_quick_start/interface/i_storage.dart';
-import 'package:get_arch_quick_start/quick_start.dart';
+import 'package:get_arch_quick_start/qs_test.dart';
 import 'package:mockito/mockito.dart';
 
 class MockUserDataSource extends Mock implements IUserLocal {}

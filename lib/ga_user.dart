@@ -11,6 +11,6 @@ export 'interface/i_user_api.dart';
 export 'interface/i_user_local.dart';
 export 'interface/auth_vm.dart';
 
-export 'infrastructure/ui/auth_page.dart';
+export 'infrastructure/ui/page/auth_page.dart';
 
 export 'profile/user_package.dart';

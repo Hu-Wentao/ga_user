@@ -44,16 +44,18 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
       }, (r) => r.nickname) ??
       'loading...';
 
+  /// 获取性别
   Sex getSex() => m?.fold<Sex>((f) => null, (r) => r?.sex);
+  Either<Failure, Sex> eitherSex() => m?.map<Sex>((_) => _?.sex);
 
   String getEmail() =>
       m?.fold<String>(
-          (f) => f is NotLoginFailure ? '您尚未登陆' : 'error!', (r) => r?.email) ??
+          (f) => f is NotLoginFailure ? '- -' : 'error!', (r) => r?.email) ??
       'loading...';
 
   String getPhone() =>
       m?.fold<String>(
-          (f) => f is NotLoginFailure ? '您尚未登陆' : 'error!', (r) => r?.phone) ??
+          (f) => f is NotLoginFailure ? '- -' : 'error!', (r) => r?.phone) ??
       'loading...';
 
   /// 更新头像
@@ -64,7 +66,7 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
   updateNickName(String nNickname) async => await _updateNickName(nNickname);
 
   /// 更新
-  updateSex(Sex nSex) async => await _updateSex(nSex);
+  Future<Either<Failure, Unit>> updateSex(Sex nSex) async => await _updateSex(nSex);
 
   /// 更新
   updateEmail(String nEmail) {

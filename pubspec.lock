@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.0"
+    version: "6.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.39.10"
+    version: "0.39.14"
   archive:
     dependency: transitive
     description:
@@ -36,13 +36,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.1"
-  auto_route:
-    dependency: transitive
-    description:
-      name: auto_route
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.6.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -91,7 +84,7 @@ packages:
       name: build_runner
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.10.0"
+    version: "1.10.1"
   build_runner_core:
     dependency: transitive
     description:
@@ -127,6 +120,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.2"
+  cli_util:
+    dependency: transitive
+    description:
+      name: cli_util
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.4"
   code_builder:
     dependency: transitive
     description:
@@ -262,14 +262,14 @@ packages:
       path: "D:/flutter_arch/get_arch_core"
       relative: false
     source: path
-    version: "0.6.1"
+    version: "1.0.0"
   get_arch_quick_start:
     dependency: "direct main"
     description:
       path: "D:/flutter_arch/get_arch_quick_start"
       relative: false
     source: path
-    version: "0.6.3"
+    version: "1.0.0"
   get_env_info:
     dependency: "direct main"
     description:
@@ -283,14 +283,14 @@ packages:
       name: get_it
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.4"
   get_state:
     dependency: "direct main"
     description:
       path: "D:\\flutter_arch\\get_state"
       relative: false
     source: path
-    version: "3.6.0"
+    version: "3.7.0-dev"
   glob:
     dependency: transitive
     description:
@@ -374,14 +374,14 @@ packages:
       name: injectable
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.4.0+1"
+    version: "1.0.2"
   injectable_generator:
     dependency: "direct dev"
     description:
       name: injectable_generator
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.4.1"
+    version: "1.0.3"
   intl:
     dependency: transitive
     description:

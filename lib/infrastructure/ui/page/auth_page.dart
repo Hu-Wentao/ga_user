@@ -9,7 +9,7 @@ import 'package:ga_user/interface/auth_vm.dart';
 import 'package:get_arch_quick_start/quick_start.dart';
 import 'package:get_state/get_state.dart';
 
-import 'auth_view.dart';
+import '../auth_view.dart';
 
 ///
 /// View级别注册,

@@ -3,9 +3,8 @@
 // Date  : 2020/7/11
 // Time  : 13:13
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:ga_user/infrastructure/user_api_impl.dart';
-import 'package:get_arch_quick_start/quick_start.dart';
+import 'package:get_arch_quick_start/qs_test.dart';
 
 main() {
 //  final g = GetIt.I;
