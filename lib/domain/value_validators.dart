@@ -3,7 +3,6 @@
 // Date  : 2020/3/29
 // Time  : 18:07
 
-
 import 'package:get_arch_quick_start/quick_start.dart';
 
 const _emailRegex =

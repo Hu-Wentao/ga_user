@@ -66,7 +66,8 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
   updateNickName(String nNickname) async => await _updateNickName(nNickname);
 
   /// 更新
-  Future<Either<Failure, Unit>> updateSex(Sex nSex) async => await _updateSex(nSex);
+  Future<Either<Failure, Unit>> updateSex(Sex nSex) async =>
+      await _updateSex(nSex);
 
   /// 更新
   updateEmail(String nEmail) {

@@ -20,8 +20,8 @@ abstract class AuthDto extends IDto with _$AuthDto {
     EnvInfoDto env,
   }) = _AuthDto;
 
-  factory AuthDto.fromDomain(String email, String password,
-      EnvInfoDto envDto) =>
+  factory AuthDto.fromDomain(
+          String email, String password, EnvInfoDto envDto) =>
       AuthDto(
         email: email,
         password: password,
