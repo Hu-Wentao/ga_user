@@ -218,36 +218,20 @@ class _StringEditableViewState extends State<StringEditableView> {
 
 ///
 /// 可编辑的头像
-class EditableAvatar extends StatefulWidget {
+class EditableAvatar extends StatelessWidget {
+  // 用于判断当前是否存在已登录用户, 如果有则展示"编辑头像"按钮
+  final Either<Failure, User> hasUser;
   final Future<Either<Failure, Uint8List>> avatarBytes;
   final String nickname;
-  final Future<void> Function(String filePath) updateAvatar;
+  final Future<Failure> Function(String filePath) updateAvatar;
 
   const EditableAvatar({
     Key key,
+    @required this.hasUser,
     @required this.avatarBytes,
     @required this.nickname,
     @required this.updateAvatar,
   }) : super(key: key);
-
-  @override
-  _EditableAvatarState createState() => _EditableAvatarState();
-}
-
-class _EditableAvatarState extends State<EditableAvatar> {
-  ValueNotifier<bool> _showAvatarEditIconNotifier;
-  @override
-  void initState() {
-    _showAvatarEditIconNotifier = ValueNotifier(false);
-    _showAvatarEditIconNotifier.addListener(() => setState(() {}));
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _showAvatarEditIconNotifier.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) => Center(
@@ -257,23 +241,26 @@ class _EditableAvatarState extends State<EditableAvatar> {
             fit: StackFit.loose,
             children: [
               FutureAvatar(
-                avatarBytes: widget.avatarBytes,
-                nickname: widget.nickname,
-                successNotifier: _showAvatarEditIconNotifier,
+                avatarBytes: avatarBytes,
+                nickname: nickname,
               ),
-              if (_showAvatarEditIconNotifier.value)
+              if (hasUser?.isRight() ?? false)
                 Positioned(
                   right: -15,
                   bottom: -15,
                   child: IconButton(
-                    icon: Icon(Icons.photo_camera),
-                    onPressed: () async {
-                      // 可以将Picker放到挂载的Module中, 但没有必要
-                      final path = (await ImagePicker()
-                              .getImage(source: ImageSource.gallery))
-                          .path;
-                      widget.updateAvatar(path);
-                    },
+                    icon: Icon(Icons.photo_camera, color: Colors.black54),
+                    // 可以将Picker放到挂载的Module中, 但没有必要
+                    onPressed: () async => updateAvatar((await ImagePicker()
+                                .getImage(source: ImageSource.gallery))
+                            .path)
+                        .asyncMapFailure((f) {
+                      if (f is InvalidInputWithoutFeedbackFailure) {
+                        GetIt.I<IDialog>().toast('您没有选择头像');
+                        return null;
+                      }
+                      return f;
+                    }).asyncErrDialog(context),
                   ),
                 )
             ]),

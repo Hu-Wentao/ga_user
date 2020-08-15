@@ -36,13 +36,11 @@ class UserCardView extends View<UserDateVm> {
 class FutureAvatar extends StatelessWidget {
   final Future<Either<Failure, Uint8List>> avatarBytes;
   final String nickname;
-  final ValueNotifier<bool> successNotifier;
-  const FutureAvatar(
-      {Key key,
-      @required this.avatarBytes,
-      @required this.nickname,
-      this.successNotifier})
-      : super(key: key);
+  const FutureAvatar({
+    Key key,
+    @required this.avatarBytes,
+    @required this.nickname,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
@@ -58,20 +56,17 @@ class FutureAvatar extends StatelessWidget {
                   textStyle: TextStyle(fontSize: 27, color: Colors.white),
                   onTap: () => l.errDialog(c),
                 ),
-                (r) {
-                  successNotifier.value = true;
-                  return FLAvatar(
-                    // 成功获取头像数据
-                    color: r == null ? Colors.blue : null,
-                    image: r == null ? null : Image(image: MemoryImage(r)),
-                    text: r == null
-                        ? '${nickname.padLeft(2).substring(nickname.length - 2, nickname.length)}'
-                        : null,
-                    width: 100,
-                    height: 100,
-                    textStyle: TextStyle(fontSize: 17, color: Colors.white),
-                  );
-                },
+                (r) => FLAvatar(
+                  // 成功获取头像数据
+                  color: r == null ? Colors.blue : null,
+                  image: r == null ? null : Image(image: MemoryImage(r)),
+                  text: r == null
+                      ? '${nickname.padLeft(2).substring(nickname.length - 2, nickname.length)}'
+                      : null,
+                  width: 100,
+                  height: 100,
+                  textStyle: TextStyle(fontSize: 17, color: Colors.white),
+                ),
                 onNull: () => CircularProgressIndicator(),
               ));
 }

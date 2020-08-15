@@ -27,6 +27,7 @@ class EditUserDataPage extends View<UserDateVm> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 48, 16, 36),
                 child: EditableAvatar(
+                  hasUser: vm.m,
                   updateAvatar: vm.updateAvatar,
                   nickname: vm.getNickName(),
                   avatarBytes: vm.getAvatar(),

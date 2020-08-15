@@ -28,6 +28,8 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
   ) : super(create: () async => await _getUser(null));
 
   /// 从数据源刷新Model
+  /// 如果是 obs用例, 推荐使用 [BaseViewModel],
+  /// 当数据源刷新时,直接通过StreamBuilder自动更新UI,无需使用 [vmUpdate]
   Future<void> refreshModel() async {
     final r = await _getUser(null);
     vmUpdate(r);
@@ -48,19 +50,21 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
   Sex getSex() => m?.fold<Sex>((f) => null, (r) => r?.sex);
   Either<Failure, Sex> eitherSex() => m?.map<Sex>((_) => _?.sex);
 
+  /// 获取邮箱
   String getEmail() =>
       m?.fold<String>(
           (f) => f is NotLoginFailure ? '- -' : 'error!', (r) => r?.email) ??
-      'loading...';
+      '- -';
 
+  /// 获取手机号
   String getPhone() =>
       m?.fold<String>(
           (f) => f is NotLoginFailure ? '- -' : 'error!', (r) => r?.phone) ??
-      'loading...';
+      '- -';
 
   /// 更新头像
-  Future<void> updateAvatar(String nAvatarFilePath) async =>
-      await _uploadAvatarAndUpdate(nAvatarFilePath);
+  Future<Failure> updateAvatar(String nAvatarFilePath) async =>
+      await _uploadAvatarAndUpdate(nAvatarFilePath).asyncLeftOrNull();
 
   /// 更新昵称
   updateNickName(String nNickname) async => await _updateNickName(nNickname);
@@ -69,12 +73,12 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
   Future<Either<Failure, Unit>> updateSex(Sex nSex) async =>
       await _updateSex(nSex);
 
-  /// 更新
+  /// 更新 邮箱
   updateEmail(String nEmail) {
     // todo
   }
 
-  /// 更新
+  /// 更新 手机号
   updatePhone(String nPhone) {
     // todo
   }
