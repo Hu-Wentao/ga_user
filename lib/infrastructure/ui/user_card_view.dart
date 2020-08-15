@@ -49,56 +49,29 @@ class FutureAvatar extends StatelessWidget {
       FutureBuilder<Either<Failure, Uint8List>>(
           initialData: null,
           future: avatarBytes,
-          builder: (c, s) {
-            final data = s.data;
-            // 初始数据 / 数据为空
-            if (data == null) return CircularProgressIndicator();
-            return data.fold(
-              (l) {
-                if (l is NotLoginFailure)
-                  return FLAvatar(
-                    color: Colors.grey,
-                    width: 100,
-                    height: 100,
-                    text: '未登陆',
-                    textStyle: TextStyle(fontSize: 27, color: Colors.white),
-                    onTap: () {
-                      // TODO 点击头像进入登录页
-                    },
-                  );
-
-                return FLAvatar(
-                  color: Colors.redAccent,
+          builder: (c, s) => s.data.safeFold(
+                (l) => FLAvatar(
+                  color: (l is NotLoginFailure) ? Colors.grey : Colors.red,
                   width: 100,
                   height: 100,
-                  text: '未知错误',
+                  text: (l is NotLoginFailure) ? '未登录' : 'Error',
                   textStyle: TextStyle(fontSize: 27, color: Colors.white),
-                  onTap: () {
-                    // todo 点击头像展示错误
-                  },
-                );
-              },
-              (r) {
-                successNotifier.value = true;
-                final bytes = data.getOrElse(() => null);
-                if (bytes == null) {
+                  onTap: () => l.errDialog(c),
+                ),
+                (r) {
+                  successNotifier.value = true;
                   return FLAvatar(
-                    color: Colors.blue,
+                    // 成功获取头像数据
+                    color: r == null ? Colors.blue : null,
+                    image: r == null ? null : Image(image: MemoryImage(r)),
+                    text: r == null
+                        ? '${nickname.padLeft(2).substring(nickname.length - 2, nickname.length)}'
+                        : null,
                     width: 100,
                     height: 100,
-                    text:
-                        '${nickname.padLeft(2).substring(nickname.length - 2, nickname.length)}',
-                    textStyle: TextStyle(fontSize: 27, color: Colors.white),
+                    textStyle: TextStyle(fontSize: 17, color: Colors.white),
                   );
-                }
-                return FLAvatar(
-                  // 成功获取头像数据
-                  image: Image(image: MemoryImage(bytes)),
-                  width: 100,
-                  height: 100,
-                  textStyle: TextStyle(fontSize: 17, color: Colors.white),
-                );
-              },
-            );
-          });
+                },
+                onNull: () => CircularProgressIndicator(),
+              ));
 }
