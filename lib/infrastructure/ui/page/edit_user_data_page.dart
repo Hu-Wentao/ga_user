@@ -6,12 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:ga_user/domain/entities/user.dart';
 import 'package:ga_user/infrastructure/ui/editable_info_view.dart';
 import 'package:ga_user/interface/user_date_vm.dart';
+import 'package:ga_user/profile/user_package.dart';
 import 'package:get_state/get_state.dart';
 
 ///
 /// 是 [UserDataVm]的根页面, 每次进入该Page,都会重载VM
 class EditUserDataPage extends View<UserDateVm> {
   EditUserDataPage() : super(isRoot: true);
+
+  @override
+  registerVmInstance() => specProfileRegisterFunc[UserDateVm].call();
 
   @override
   Widget build(BuildContext c, UserDateVm vm) => Scaffold(

@@ -50,41 +50,41 @@ class _EnumEditableViewState<T> extends State<EnumEditableView<T>> {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading:
-    Text(widget.leading, style: Theme.of(context).textTheme.subtitle1),
-    title: widget.eitherValue.safeFold(
+        leading:
+            Text(widget.leading, style: Theme.of(context).textTheme.subtitle1),
+        title: widget.eitherValue.safeFold(
             (l) => Text('- -'), (r) => Text(widget.enumTextMap[r]),
-        onNull: () => LinearProgressIndicator()),
-    trailing: widget.eitherValue == null
-        ? null
-        : IconButton(
-        icon: Icon(Icons.chevron_right),
-        onPressed: () => widget.eitherValue.fold(
-                (l) => GetIt.I<IDialog>().err(l,
-                tag: '_EnumEditableViewState.build', ctx: context),
-                (r) => showDialog<bool>(
-                context: context,
-                builder: (c) => QuickAlert(
-                  title: Text(widget.dialogTitle),
-                  content: _RadioTileList<T>(
-                      showingEnumNotifier: showingEnumNotifier,
-                      enumTextMap: widget.enumTextMap),
-                  onCancel: () => _onCancelEdit(c),
-                  onConfirm: () async {
-                    if (showingEnumNotifier.value != r) {
-                      await widget
-                          .updateValue(showingEnumNotifier.value);
-                      _onConfirmEdit(c);
-                    } else
-                      _onCancelEdit(c);
-                  },
-                )).then((dialogReturn) =>
-                Scaffold.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(dialogReturn ? '正在保存...' : '取消编辑'),
-                      duration: const Duration(seconds: 2)),
-                )))),
-  );
+            onNull: () => LinearProgressIndicator()),
+        trailing: widget.eitherValue == null
+            ? null
+            : IconButton(
+                icon: Icon(Icons.chevron_right),
+                onPressed: () => widget.eitherValue.fold(
+                    (l) => GetIt.I<IDialog>().err(l,
+                        tag: '_EnumEditableViewState.build', ctx: context),
+                    (r) => showDialog<bool>(
+                        context: context,
+                        builder: (c) => QuickAlert(
+                              title: Text(widget.dialogTitle),
+                              content: _RadioTileList<T>(
+                                  showingEnumNotifier: showingEnumNotifier,
+                                  enumTextMap: widget.enumTextMap),
+                              onCancel: () => _onCancelEdit(c),
+                              onConfirm: () async {
+                                if (showingEnumNotifier.value != r) {
+                                  await widget
+                                      .updateValue(showingEnumNotifier.value);
+                                  _onConfirmEdit(c);
+                                } else
+                                  _onCancelEdit(c);
+                              },
+                            )).then((dialogReturn) =>
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(dialogReturn ? '正在保存...' : '取消编辑'),
+                              duration: const Duration(seconds: 2)),
+                        )))),
+      );
 
   _onCancelEdit(BuildContext _) => Navigator.pop(_, false);
 
@@ -108,16 +108,16 @@ class _RadioTileList<T> extends StatefulWidget {
 class __RadioTileListState<T> extends State<_RadioTileList<T>> {
   @override
   Widget build(BuildContext context) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: List.generate(
-        Sex.values.length,
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(
+            Sex.values.length,
             (i) => RadioListTile<T>(
-          title: Text(widget.enumTextMap.values.elementAt(i)),
-          value: widget.enumTextMap.keys.elementAt(i),
-          groupValue: widget.showingEnumNotifier.value,
-          onChanged: _refresh,
-        )),
-  );
+                  title: Text(widget.enumTextMap.values.elementAt(i)),
+                  value: widget.enumTextMap.keys.elementAt(i),
+                  groupValue: widget.showingEnumNotifier.value,
+                  onChanged: _refresh,
+                )),
+      );
 
   void _refresh(T value) =>
       setState(() => widget.showingEnumNotifier.value = value);
@@ -171,45 +171,45 @@ class _StringEditableViewState extends State<StringEditableView> {
       trailing: IconButton(
           icon: Icon(Icons.chevron_right),
           onPressed: () => showDialog<bool>(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                title: Text(widget.dialogTitle),
-                content: TextField(
-                  controller: ctrl,
-                  keyboardType: TextInputType.text,
-                ),
-                contentPadding:
-                const EdgeInsets.only(left: 20, right: 20, top: 18),
-                actions: <Widget>[
-                  FlatButton(
-                    highlightColor: const Color(0x55FF8A80),
-                    splashColor: const Color(0x99FF8A80),
-                    onPressed: () => _onCancelEdit(ctx),
-                    child: Text(widget.dialogCancelTitle,
-                        style: TextStyle(color: Colors.redAccent)),
-                  ),
-                  FlatButton(
-                    onPressed: () async {
-                      if (ctrl.text != null) {
-                        widget.updateValue(ctrl.text);
-                        _onConfirmEdit(ctx);
-                      } else {
-                        _onCancelEdit(ctx);
-                      }
-                    },
-                    child: Text(widget.dialogConfirmTitle),
-                  ),
-                ],
-              )).then(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        title: Text(widget.dialogTitle),
+                        content: TextField(
+                          controller: ctrl,
+                          keyboardType: TextInputType.text,
+                        ),
+                        contentPadding:
+                            const EdgeInsets.only(left: 20, right: 20, top: 18),
+                        actions: <Widget>[
+                          FlatButton(
+                            highlightColor: const Color(0x55FF8A80),
+                            splashColor: const Color(0x99FF8A80),
+                            onPressed: () => _onCancelEdit(ctx),
+                            child: Text(widget.dialogCancelTitle,
+                                style: TextStyle(color: Colors.redAccent)),
+                          ),
+                          FlatButton(
+                            onPressed: () async {
+                              if (ctrl.text != null) {
+                                widget.updateValue(ctrl.text);
+                                _onConfirmEdit(ctx);
+                              } else {
+                                _onCancelEdit(ctx);
+                              }
+                            },
+                            child: Text(widget.dialogConfirmTitle),
+                          ),
+                        ],
+                      )).then(
                 (dialogReturn) => Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text(
+                    content: Text(
                   (dialogReturn ?? false)
                       ? widget.editSavingMsg
                       : widget.editCancelMsg,
                 ))),
-          )));
+              )));
 
   _onCancelEdit(BuildContext ctx) => Navigator.of(context).pop(false);
 
@@ -251,31 +251,31 @@ class _EditableAvatarState extends State<EditableAvatar> {
 
   @override
   Widget build(BuildContext context) => Center(
-    child: Stack(
-        alignment: Alignment.center,
-        overflow: Overflow.visible,
-        fit: StackFit.loose,
-        children: [
-          FutureAvatar(
-            avatarBytes: widget.avatarBytes,
-            nickname: widget.nickname,
-            successNotifier: _showAvatarEditIconNotifier,
-          ),
-          if (_showAvatarEditIconNotifier.value)
-            Positioned(
-              right: -15,
-              bottom: -15,
-              child: IconButton(
-                icon: Icon(Icons.photo_camera),
-                onPressed: () async {
-                  // 可以将Picker放到挂载的Module中, 但没有必要
-                  final path = (await ImagePicker()
-                      .getImage(source: ImageSource.gallery))
-                      .path;
-                  widget.updateAvatar(path);
-                },
+        child: Stack(
+            alignment: Alignment.center,
+            overflow: Overflow.visible,
+            fit: StackFit.loose,
+            children: [
+              FutureAvatar(
+                avatarBytes: widget.avatarBytes,
+                nickname: widget.nickname,
+                successNotifier: _showAvatarEditIconNotifier,
               ),
-            )
-        ]),
-  );
+              if (_showAvatarEditIconNotifier.value)
+                Positioned(
+                  right: -15,
+                  bottom: -15,
+                  child: IconButton(
+                    icon: Icon(Icons.photo_camera),
+                    onPressed: () async {
+                      // 可以将Picker放到挂载的Module中, 但没有必要
+                      final path = (await ImagePicker()
+                              .getImage(source: ImageSource.gallery))
+                          .path;
+                      widget.updateAvatar(path);
+                    },
+                  ),
+                )
+            ]),
+      );
 }

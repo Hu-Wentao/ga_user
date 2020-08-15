@@ -121,38 +121,43 @@ class UserPackage extends IGetArchPackage {
           ));
 
     // 用例注册 (均默认开启)
-    for (final entry in _specProfileRegisterFunc.entries)
+    for (final entry in specProfileRegisterFunc.entries)
       if (specProfile == null || specProfile[entry.key] ?? true)
         entry.value.call();
   }
 }
 
-Map<Type, Function()> get _specProfileRegisterFunc => {
-      UserLogin: () =>
-          g.registerLazySingleton<UserLogin>(() => UserLogin(g<IUserRepo>())),
-      UserRegister: () => g.registerLazySingleton<UserRegister>(
-          () => UserRegister(g<IUserRepo>())),
-      UserDateVm: () => g.registerLazySingleton<UserDateVm>(() => UserDateVm(
-            g<GetUser>(),
-            g<UserUploadAvatarAndUpdate>(),
-            g<UserUpdateNickname>(),
-            g<UserUpdateSex>(),
-            g<GetAvatar>(),
-          )),
-      UserLogout: () =>
-          g.registerLazySingleton<UserLogout>(() => UserLogout(g<IUserRepo>())),
-      GetAvatar: () => g.registerLazySingleton<GetAvatar>(
-          () => GetAvatar(g<IUserRepo>(), g<GetUser>())),
-      GetUser: () =>
-          g.registerLazySingleton<GetUser>(() => GetUser(g<IUserRepo>())),
-      UserUpdateSex: () => g.registerLazySingleton<UserUpdateSex>(
-          () => UserUpdateSex(g<IUserRepo>())),
-      UserUploadAvatarAndUpdate: () =>
-          g.registerLazySingleton<UserUploadAvatarAndUpdate>(
-              () => UserUploadAvatarAndUpdate(g<IUserRepo>())),
-      UserUpdateNickname: () => g.registerLazySingleton<UserUpdateNickname>(
-          () => UserUpdateNickname(g<IUserRepo>())),
-    };
+final Map<Type, Function()> specProfileRegisterFunc = {
+  UserLogin: () =>
+      g.registerLazySingleton<UserLogin>(() => UserLogin(g<IUserRepo>())),
+  UserRegister: () =>
+      g.registerLazySingleton<UserRegister>(() => UserRegister(g<IUserRepo>())),
+  AuthVm: () => g.registerLazySingleton<AuthVm>(() => AuthVm(
+        g<UserLogin>(),
+        g<UserRegister>(),
+        g<IDialog>(),
+      )),
+  UserDateVm: () => g.registerLazySingleton<UserDateVm>(() => UserDateVm(
+        g<GetUser>(),
+        g<UserUploadAvatarAndUpdate>(),
+        g<UserUpdateNickname>(),
+        g<UserUpdateSex>(),
+        g<GetAvatar>(),
+      )),
+  UserLogout: () =>
+      g.registerLazySingleton<UserLogout>(() => UserLogout(g<IUserRepo>())),
+  GetAvatar: () => g.registerLazySingleton<GetAvatar>(
+      () => GetAvatar(g<IUserRepo>(), g<GetUser>())),
+  GetUser: () =>
+      g.registerLazySingleton<GetUser>(() => GetUser(g<IUserRepo>())),
+  UserUpdateSex: () => g.registerLazySingleton<UserUpdateSex>(
+      () => UserUpdateSex(g<IUserRepo>())),
+  UserUploadAvatarAndUpdate: () =>
+      g.registerLazySingleton<UserUploadAvatarAndUpdate>(
+          () => UserUploadAvatarAndUpdate(g<IUserRepo>())),
+  UserUpdateNickname: () => g.registerLazySingleton<UserUpdateNickname>(
+      () => UserUpdateNickname(g<IUserRepo>())),
+};
 
 ///// 在这里可以使用injectable自动生成DI代码,
 ///// 直接将生成的代码复制到initPackageDI()中, 便于通过配置参数控制依赖注入
