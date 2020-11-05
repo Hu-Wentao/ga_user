@@ -21,6 +21,8 @@ class UserUploadAvatarAndUpdate extends UseCase<Unit, String> {
   @override
   Future<Either<Failure, Unit>> call(String nAvatarFilePath) async {
     try {
+      if (nAvatarFilePath == null)
+        return left(InvalidInputWithoutFeedbackFailure('您没有选择图片'));
       // 先上传图片 -得到最新的id
       final id = await repo.uploadAvatar(nAvatarFilePath);
       if (id.isLeft()) return id.map<Unit>(null);

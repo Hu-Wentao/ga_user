@@ -25,7 +25,18 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
     this._updateNickName,
     this._updateSex,
     this._getAvatar,
-  ) : super(create: () async => await _getUser(null));
+  ) {
+    init();
+  }
+
+  init() async {
+    this.m = await _getUser(null);
+  }
+
+  Map<Sex, String> get sexToString => <Sex, String>{
+        Sex.male: '男',
+        Sex.female: '女',
+      };
 
   /// 从数据源刷新Model
   /// 如果是 obs用例, 推荐使用 [BaseViewModel],
@@ -48,6 +59,7 @@ class UserDateVm extends ViewModel<Either<Failure, User>> {
 
   /// 获取性别
   Sex getSex() => m?.fold<Sex>((f) => null, (r) => r?.sex);
+
   Either<Failure, Sex> eitherSex() => m?.map<Sex>((_) => _?.sex);
 
   /// 获取邮箱

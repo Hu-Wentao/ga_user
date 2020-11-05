@@ -44,10 +44,7 @@ class EditUserDataPage extends View<UserDateVm> {
                 dialogTitle: '修改性别',
                 eitherValue: vm.eitherSex(),
                 updateValue: vm.updateSex,
-                enumTextMap: <Sex, String>{
-                  Sex.male: '男',
-                  Sex.female: '女',
-                },
+                enumTextMap: vm.sexToString,
               ),
               StringEditableView(
                 leading: '邮箱',
